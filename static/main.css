@@ -25,3 +25,13 @@ h1 {
 body{
     background-color: dimgray;
 }
+
+div .current_stats {
+    color: #000000;
+    font-weight: bold;
+    text-align: left;
+}
+
+div .mod_stats {
+    text-align: left;
+}

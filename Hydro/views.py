@@ -15,10 +15,10 @@ def details(request, reservoir_id):
     r = get_object_or_404(Reservoir, pk=reservoir_id)
     current_ppm = r.current_ppm
     current_ph = r.current_ph
-    res = PlotZone.objects.get(pk=reservoir_id)
-    current_temp = res.current_temp
-    current_humid = res.current_humid
-    res_id = res.id
+    plot = PlotZone.objects.get(pk=reservoir_id)
+    current_temp = plot.current_temp
+    current_humid = plot.current_humid
+    res_id = plot.id
     context = {'res_id': res_id, 'current_ppm': current_ppm, 'current_ph': current_ph, 'current_temp': current_temp,
                'current_humid': current_humid, }
     return render(request, 'Hydro/ResDetails.html', context)
@@ -26,7 +26,7 @@ def details(request, reservoir_id):
 
 def modify_res(request, reservoir_id):
     try:
-        r = Reservoir.objects.get(pk=reservoir_id)
+        r = get_object_or_404(Reservoir, pk=reservoir_id)
         r.save()
     except Reservoir.DoesNotExist:
         r = None
@@ -35,14 +35,11 @@ def modify_res(request, reservoir_id):
     lower_ph = r.goal_ph_low
     res_id = r.id
     if request.method == 'POST':
-        form = ReservoirForm(request.POST)
-        form.save()
+        form = ReservoirForm(request.POST, instance=r)
         if form.is_valid():
-            form.save(commit=True)
-
+            form.save()
         else:
             print form.errors
-
     else:
         form = ReservoirForm()
 
