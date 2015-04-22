@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <header><h1>Details for Reservoir {{ res_id }}</h1></header>
+    <ul>
+        {% if current_ph != 0 %}
+        <li>Current pH: {{ current_ph }}</li>
+        {% endif %}
+        {% if current_PPM.is_integer != 0 %}
+        <li>Current PPM: {{ current_ppm }}</li>
+        {% endif %}
+        {% if current_temp != 0 %}
+        <li>Current Temperature: {{ current_temp }}</li>
+        {% endif %}
+        {% if current_humid.is_integer != 0 %}
+        <li>Current Humidity: {{ current_humid }}</li>
+        {% endif %}
+    </ul>
+
+</body>
+</html>

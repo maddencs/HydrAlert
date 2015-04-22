@@ -1,0 +1,27 @@
+div .PlotBox{
+    position:relative;
+    width:50%;
+    height:50%;
+    background-color:darkgreen;
+    color:gold;
+    font-weight:bold;
+}
+
+ul .ReservoirDetails {
+    background-color: slategrey;
+    color:darkred;
+    text-align:right;
+    width:30%;
+    box-shadow: 0 0 0 3px;
+}
+
+h1 {
+    text-align:center;
+    font-weight:bold;
+    font-style:italic;
+    background-color: darkred;
+}
+
+body{
+    background-color: dimgray;
+}
