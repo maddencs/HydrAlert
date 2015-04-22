@@ -7,6 +7,7 @@ import django
 django.setup()
 
 from django.http import HttpResponse
+from django.db import models
 
 def within_range(goal, current, fail_limit):
     # multiply by 10 because pH is a float

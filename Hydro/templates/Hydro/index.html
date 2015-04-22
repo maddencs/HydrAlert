@@ -8,14 +8,14 @@
     <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}"/>
 </head>
 <body>
-    <header><h1>HydroPynix!!</h1></header>
+    <header><h1>HydroAlert</h1></header>
     {% if plot_list %}
         {% for plot in plot_list %}
         <div class="PlotBox">
          <span class="PlotID">Plot ID:</span> {{ plot.id }}<br>
             <ul>
                 {% for reservoir in plot.reservoir_set.all %}
-                <li class="Reservoir ID"><a href="/Hydro/{{ plot.id }}/details/">Reservoir ID: {{ reservoir.id }}</a></li>
+                <li class="Reservoir ID"><a href="/Hydro/{{ plot.id }}/modify/">Reservoir ID: {{ reservoir.id }}</a></li>
                     <ul class="ReservoirDetails">
                         {% if reservoir.current_ph != 0 %}
                         <li>Current pH: {{ reservoir.current_ph }}</li>
