@@ -15,16 +15,14 @@
     <header><h1>HydroAlert</h1></header>
     <div class="current_stats">
         <ul>
-            <li>Goal Temperature: {{ current_ph }}</li>
-            <li>pH Lower Limit: {{ lower_ph }}</li>
-            <li>pH Upper Limit: {{ upper_ph }}</li>
-            <li>Comments: {{ comments }}</li>
+            <li></li>
         </ul>
     </div>
+
     <div class="mod_stats">
-        <form id="reservoir_form" method="post" action="/Hydro/{{ res_id }}/resmod/">
+        <form id="plot_form" method="post" action="/Hydro/{{ plot_id }}/plotmod/">
             {% csrf_token %}
-            {{ form.as_table|linebreaksbr }}
+            {{ form|linebreaksbr }}
             <input type="submit" name="submit" value="Update" />
         </form>
     </div>

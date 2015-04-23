@@ -23,17 +23,14 @@
       <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
       <column name="current_temp" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
       <column name="current_humid" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
-      <column name="light_start" sqlType="TIME" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
-      <column name="light_stop" sqlType="TIME" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
       <column name="goal_temp" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
       <column name="goal_humid" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
-      <column name="plot_owner_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
       <column name="plot_comments" sqlType="VARCHAR(3000)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="light_start" sqlType="TIME" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="light_stop" sqlType="TIME" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
       <primary-key columns="id"/>
-      <foreign-key name="#FAKE_Hydro_plotzone_1" columns="plot_owner_id" ref-table="Hydro_userprofile" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
       <exported-key name="#FAKE_Hydro_alertemail_3" table="Hydro_alertemail" schema="" catalog="" columns="plot_zone_id"/>
       <exported-key name="#FAKE_Hydro_reservoir_1" table="Hydro_reservoir" schema="" catalog="" columns="plot_id"/>
-      <index name="Hydro_plotzone_d2ef0fa3" unique="true" columns="plot_owner_id"/>
     </table>
     <table name="Hydro_reservoir" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
@@ -55,7 +52,6 @@
       <column name="email" sqlType="VARCHAR(254)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
       <primary-key columns="id"/>
       <exported-key name="#FAKE_Hydro_alertemail_2" table="Hydro_alertemail" schema="" catalog="" columns="recipient_id"/>
-      <exported-key name="#FAKE_Hydro_plotzone_1" table="Hydro_plotzone" schema="" catalog="" columns="plot_owner_id"/>
     </table>
     <table name="auth_group" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>

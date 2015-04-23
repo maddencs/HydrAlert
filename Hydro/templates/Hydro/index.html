@@ -11,25 +11,30 @@
     <header><h1>Hydro</h1></header>
     {% if plot_list %}
         {% for plot in plot_list %}
-        <div class="PlotBox">
-         <span class="PlotID">Plot ID:</span> {{ plot.id }}<br>
-            <ul>
-                {% for reservoir in plot.reservoir_set.all %}
-                <li class="Reservoir ID"><a href="/Hydro/{{ reservoir.id }}/modify/">Reservoir ID: {{ reservoir.id }}</a></li>
-                    <ul class="ReservoirDetails">
-                        {% if reservoir.current_ph != 0 %}
-                        <li>Current pH: {{ reservoir.current_ph }}</li>
-                        {% endif %}
-                        {% if reservoir.current_ppm != 0 %}
-                        <li>Current PPM: {{ reservoir.current_ppm }}</li>
-                        {% endif %}
-                        {% if reservoir.current_temp != 0 %}
-                        <li>Current Room Temp: {{ plot.current_temp }}</li>
-                        {% endif %}
-                    </ul>
-                {% endfor %}
-            </ul>
-        </div>
+        <article>
+            <div class="PlotBox">
+             <a href="/Hydro/{{ plot.id }}/plotmod/">Plot ID: {{ plot.id }}</a><br>
+                <aside>
+                            {{ plot.plot_comments }}
+                        </aside>
+                <ul>
+                    {% for reservoir in plot.reservoir_set.all %}
+                    <li class="Reservoir ID"><a href="/Hydro/{{ reservoir.id }}/resmod/">Reservoir ID: {{ reservoir.id }}</a></li>
+                        <ul class="ReservoirDetails">
+                            {% if reservoir.current_ph != 0 %}
+                            <li>Current pH: {{ reservoir.current_ph }}</li>
+                            {% endif %}
+                            {% if reservoir.current_ppm != 0 %}
+                            <li>Current PPM: {{ reservoir.current_ppm }}</li>
+                            {% endif %}
+                            {% if reservoir.current_temp != 0 %}
+                            <li>Current Room Temp: {{ plot.current_temp }}</li>
+                            {% endif %}
+                        </ul>
+                    {% endfor %}
+                </ul>
+            </div>
+        </article>
         {% endfor %}
         {% else %}
         <strong>There are no plots yet.</strong>

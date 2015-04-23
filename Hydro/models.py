@@ -11,8 +11,8 @@ class PlotZone(models.Model):
     plot_comments = models.CharField(max_length=3000)
     current_temp = models.IntegerField(default=0)
     current_humid = models.IntegerField(default=0)
-    light_start = models.TimeField(TIME_FORMAT)
-    light_stop = models.TimeField(TIME_FORMAT)
+    light_start = models.TimeField()
+    light_stop = models.TimeField()
     lights_on = None
     goal_temp = models.IntegerField(default=0)
     goal_humid = models.IntegerField(default=0)
@@ -29,7 +29,7 @@ class Reservoir(models.Model):
     reservoir_comments = models.CharField(max_length=3000)
     current_ph = models.IntegerField(default=0)
     current_ppm = models.IntegerField(default=0)
-    res_change_date = models.DateField(default=None)
+    res_change_date = models.DateField(default=None, null=False, blank=True)
     goal_ph_low = models.IntegerField(default=0)
     goal_ph_high = models.IntegerField(default=0)
     ph_alert_sent = False
@@ -51,8 +51,20 @@ class AlertEmail(models.Model):
 
 
 class ReservoirForm(forms.ModelForm):
-    res_change_date = forms.DateField(widget=DateWidget(usel10n=True, bootstrap_version=3))
+    # res_change_date = forms.DateField(required=False, widget=DateWidget(usel10n=True, bootstrap_version=3))
 
     class Meta:
         model = Reservoir
         exclude = ('current_ph', 'current_ppm', 'plot', 'plot_id')
+        widgets = {
+            # Use localization and bootstrap 3
+            'datetime': DateWidget(attrs={'id': "yourdatetimeid"}, usel10n=True, bootstrap_version=3)
+        }
+
+
+class PlotForm(forms.ModelForm):
+
+    class Meta:
+        model = PlotZone
+        # fields = ('light_start', 'light_stop', 'goal_temp')
+        exclude = ('current_temp', 'lights_on', 'current_humid', )

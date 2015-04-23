@@ -7,7 +7,9 @@ import django
 django.setup()
 
 from django.http import HttpResponse
-from django.db import models
+from Hydro.models import PlotZone, Reservoir
+from datetime import datetime
+
 
 def within_range(goal, current, fail_limit):
     # multiply by 10 because pH is a float
@@ -31,8 +33,21 @@ def create_msg(**kwargs):
 def light_check(plot_object, curr_time):
     start = plot_object.light_start
     end = plot_object.light_stop
-    if start < curr_time:
-        if curr_time < end:
-            return True
-        else:
-            return False
+    if start < curr_time < end:
+        return True
+    else:
+        return False
+
+
+def reset_alerts():
+    for Plot in PlotZone.objects.all():
+        Plot.temp_alert_sent, Plot.light_alert_sent, Plot.humid_alert_sent = False
+        for res in Plot.Reservoir_set.all():
+            res.ph_alert_sent, res.ppm_alert, res.res_change_alert = False
+
+
+if __name__ == '__main__':
+    plot = PlotZone.objects.get(pk=1)
+    plot.save()
+    current_time = datetime.now().time()
+    print light_check(plot, current_time)

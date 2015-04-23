@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
-from .models import Reservoir, PlotZone, ReservoirForm
+from .models import Reservoir, PlotZone, ReservoirForm, PlotForm
 
 
 class IndexView(generic.ListView):
@@ -31,6 +31,7 @@ def modify_res(request, reservoir_id):
     except Reservoir.DoesNotExist:
         r = None
 
+    comments = r.reservoir_comments
     upper_ph = r.goal_ph_high
     lower_ph = r.goal_ph_low
     res_id = r.id
@@ -43,5 +44,31 @@ def modify_res(request, reservoir_id):
     else:
         form = ReservoirForm()
 
-    context = {'form': form, 'upper_ph': upper_ph, 'lower_ph': lower_ph, 'res_id': res_id}
+    context = {'form': form, 'upper_ph': upper_ph, 'lower_ph': lower_ph, 'res_id': res_id,'comments': comments}
     return render(request, 'Hydro/modify_res.html', context)
+
+
+def modify_plot(request, plot_id):
+    try:
+        p = get_object_or_404(PlotZone, pk=plot_id)
+        p.save()
+    except PlotZone.DoesNotExist:
+        p = None
+
+    comments = p.plot_comments
+    light_start = p.light_start
+    light_stop = p.light_stop
+    goal_temp = p.goal_temp
+    goal_humid = p.goal_humid
+    plot_id = p.id
+    if request.method == 'POST':
+        form = PlotForm(request.POST, instance=p)
+        if form.is_valid():
+            form.save()
+        else:
+            print form.errors
+    else:
+        form = PlotForm()
+
+    context = {'form': form, 'plot_id': plot_id, 'comments': comments, 'light_start': light_start, 'light_stop': light_stop, 'goal_temp': goal_temp, 'goal_humid': goal_humid,}
+    return render(request, 'Hydro/modify_plot.html', context)

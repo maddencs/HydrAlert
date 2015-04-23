@@ -1,6 +1,6 @@
 div .PlotBox{
     position:relative;
-    width:50%;
+    /*width:50%;*/
     height:50%;
     background-color:darkgreen;
     color:gold;
@@ -11,7 +11,7 @@ ul .ReservoirDetails {
     background-color: slategrey;
     color:darkred;
     text-align:right;
-    width:30%;
+    width:80%;
     box-shadow: 0 0 0 3px;
 }
 
@@ -32,6 +32,29 @@ div .current_stats {
     text-align: left;
 }
 
-div .mod_stats {
+.mod_stats {
     text-align: left;
+}
+
+form label {
+    background-color: #204d74;
+    position: relative;
+    text-align: left;
+}
+
+a:visited {
+    color: green;
+}
+
+a:link {
+    color: #c0a16b;
+    font-weight: bold;
+}
+article {
+    width: 40%;
+    background-color: #444444 ;
+    border-radius: 0px 20px 30px 40px;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    position: relative;
 }
