@@ -7,51 +7,51 @@
     <table name="Hydro_alertemail" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
       <column name="time_failed" sqlType="DATETIME" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
-      <column name="msg" sqlType="VARCHAR(3000)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
-      <column name="plot_zone_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
-      <column name="recipient_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
       <column name="res_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="plot_zone_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="msg" sqlType="VARCHAR(3000)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="sent" sqlType="BOOL" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
       <primary-key columns="id"/>
-      <foreign-key name="#FAKE_Hydro_alertemail_1" columns="res_id" ref-table="Hydro_reservoir" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
-      <foreign-key name="#FAKE_Hydro_alertemail_2" columns="recipient_id" ref-table="Hydro_userprofile" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
-      <foreign-key name="#FAKE_Hydro_alertemail_3" columns="plot_zone_id" ref-table="Hydro_plotzone" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
-      <index name="Hydro_alertemail_1a1cc17b" unique="true" columns="res_id"/>
-      <index name="Hydro_alertemail_8b938c66" unique="true" columns="recipient_id"/>
+      <foreign-key name="#FAKE_Hydro_alertemail_1" columns="plot_zone_id" ref-table="Hydro_plotzone" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_Hydro_alertemail_2" columns="res_id" ref-table="Hydro_reservoir" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
       <index name="Hydro_alertemail_647e0eb6" unique="true" columns="plot_zone_id"/>
+      <index name="Hydro_alertemail_1a1cc17b" unique="true" columns="res_id"/>
     </table>
     <table name="Hydro_plotzone" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="name" sqlType="VARCHAR(40)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="plot_comments" sqlType="VARCHAR(3000)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
       <column name="current_temp" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
       <column name="current_humid" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
-      <column name="goal_temp" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
-      <column name="goal_humid" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
-      <column name="plot_comments" sqlType="VARCHAR(3000)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
       <column name="light_start" sqlType="TIME" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
       <column name="light_stop" sqlType="TIME" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="goal_temp" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="goal_humid" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
       <primary-key columns="id"/>
-      <exported-key name="#FAKE_Hydro_alertemail_3" table="Hydro_alertemail" schema="" catalog="" columns="plot_zone_id"/>
+      <exported-key name="#FAKE_Hydro_alertemail_1" table="Hydro_alertemail" schema="" catalog="" columns="plot_zone_id"/>
       <exported-key name="#FAKE_Hydro_reservoir_1" table="Hydro_reservoir" schema="" catalog="" columns="plot_id"/>
     </table>
     <table name="Hydro_reservoir" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="plot_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="reservoir_comments" sqlType="VARCHAR(3000)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
       <column name="current_ph" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
       <column name="current_ppm" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
-      <column name="plot_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
-      <column name="goal_ph_high" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="res_change_date" sqlType="DATE" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
       <column name="goal_ph_low" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
-      <column name="reservoir_comments" sqlType="VARCHAR(3000)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
-      <column name="res_change_date" sqlType="DATE" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
+      <column name="goal_ph_high" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="ph_alert_sent" sqlType="BOOL" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <column name="ppm_alert_sent" sqlType="BOOL" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <column name="res_change_alert" sqlType="BOOL" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
       <primary-key columns="id"/>
       <foreign-key name="#FAKE_Hydro_reservoir_1" columns="plot_id" ref-table="Hydro_plotzone" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
-      <exported-key name="#FAKE_Hydro_alertemail_1" table="Hydro_alertemail" schema="" catalog="" columns="res_id"/>
+      <exported-key name="#FAKE_Hydro_alertemail_2" table="Hydro_alertemail" schema="" catalog="" columns="res_id"/>
       <index name="Hydro_reservoir_b9e8bb91" unique="true" columns="plot_id"/>
     </table>
-    <table name="Hydro_userprofile" schema="" catalog="" type="TABLE">
+    <table name="Hydro_sensors" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
-      <column name="name" sqlType="VARCHAR(25)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
-      <column name="email" sqlType="VARCHAR(254)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="type" sqlType="VARCHAR(50)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
       <primary-key columns="id"/>
-      <exported-key name="#FAKE_Hydro_alertemail_2" table="Hydro_alertemail" schema="" catalog="" columns="recipient_id"/>
     </table>
     <table name="auth_group" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>

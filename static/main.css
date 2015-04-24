@@ -2,32 +2,34 @@ div .PlotBox{
     position:relative;
     /*width:50%;*/
     height:50%;
-    background-color:darkgreen;
+    background: radial-gradient(red 5%, green 15%, blue 60%);
     color:gold;
     font-weight:bold;
 }
 
 ul .ReservoirDetails {
     background-color: slategrey;
-    color:darkred;
+    border-style: outset;
+    border-color: #3c763d;
     text-align:right;
     width:80%;
-    box-shadow: 0 0 0 3px;
+    margin: 0;
+    box-shadow: 3px;
 }
 
 h1 {
     text-align:center;
     font-weight:bold;
     font-style:italic;
-    background-color: darkred;
+    background-color: forestgreen;
 }
 
 body{
-    background-color: dimgray;
+    background-color: sienna;
 }
-
 div .current_stats {
-    color: #000000;
+
+    color: blue;
     font-weight: bold;
     text-align: left;
 }
@@ -52,9 +54,14 @@ a:link {
 }
 article {
     width: 40%;
-    background-color: #444444 ;
+    background: linear-gradient(125deg, darkgreen, forestgreen);
     border-radius: 0px 20px 30px 40px;
     margin-bottom: 10px;
     padding-bottom: 5px;
     position: relative;
+}
+
+li {
+    display: inline-block;
+    width: 50%;
 }

@@ -11,21 +11,24 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Plants',
+            name='AlertEmail',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('time_failed', models.DateTimeField()),
+                ('msg', models.CharField(max_length=3000)),
+                ('sent', models.BooleanField(default=False)),
             ],
         ),
         migrations.CreateModel(
             name='PlotZone',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('PH_BOTTOM', models.FloatField(default=0)),
-                ('PH_TOP', models.FloatField(default=0)),
+                ('name', models.CharField(max_length=40, blank=True)),
+                ('plot_comments', models.CharField(max_length=3000, blank=True)),
                 ('current_temp', models.IntegerField(default=0)),
                 ('current_humid', models.IntegerField(default=0)),
-                ('light_start', models.DateTimeField()),
-                ('light_stop', models.DateTimeField()),
+                ('light_start', models.TimeField(blank=True)),
+                ('light_stop', models.TimeField(blank=True)),
                 ('goal_temp', models.IntegerField(default=0)),
                 ('goal_humid', models.IntegerField(default=0)),
             ],
@@ -34,35 +37,33 @@ class Migration(migrations.Migration):
             name='Reservoir',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('reservoir_ph', models.IntegerField(default=0)),
-                ('reservoir_ppm', models.IntegerField(default=0)),
-                ('res_change_date', models.DateTimeField()),
-                ('plot_id', models.ForeignKey(to='Hydro.PlotZone')),
+                ('reservoir_comments', models.CharField(max_length=3000)),
+                ('current_ph', models.IntegerField(default=0)),
+                ('current_ppm', models.IntegerField(default=0)),
+                ('res_change_date', models.DateField(default=None, blank=True)),
+                ('goal_ph_low', models.IntegerField(default=0)),
+                ('goal_ph_high', models.IntegerField(default=0)),
+                ('ph_alert_sent', models.NullBooleanField(default=False)),
+                ('ppm_alert_sent', models.NullBooleanField(default=False)),
+                ('res_change_alert', models.NullBooleanField(default=False)),
+                ('plot', models.ForeignKey(to='Hydro.PlotZone')),
             ],
         ),
         migrations.CreateModel(
             name='Sensors',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('res_id', models.ForeignKey(to='Hydro.Reservoir')),
-            ],
-        ),
-        migrations.CreateModel(
-            name='User',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('name', models.CharField(max_length=25)),
-                ('email', models.EmailField(max_length=254)),
+                ('type', models.CharField(max_length=50, choices=[(b'1', b'PPM Sensor'), (b'2', b'pH Sensor'), (b'3', b'Temp/Humid Sensor'), (b'4', b'Light Sensor')])),
             ],
         ),
         migrations.AddField(
-            model_name='plotzone',
-            name='plot_owner',
-            field=models.ForeignKey(to='Hydro.User'),
+            model_name='alertemail',
+            name='plot_zone',
+            field=models.ForeignKey(to='Hydro.PlotZone'),
         ),
         migrations.AddField(
-            model_name='plants',
-            name='res_id',
+            model_name='alertemail',
+            name='res',
             field=models.ForeignKey(to='Hydro.Reservoir'),
         ),
     ]

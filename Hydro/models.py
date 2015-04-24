@@ -8,11 +8,12 @@ CHOICES = [('1', 'PPM Sensor'), ('2', 'pH Sensor'), ('3', 'Temp/Humid Sensor'), 
 
 
 class PlotZone(models.Model):
-    plot_comments = models.CharField(max_length=3000)
+    name = models.CharField(max_length=40, blank=True)
+    plot_comments = models.CharField(max_length=3000, blank=True)
     current_temp = models.IntegerField(default=0)
     current_humid = models.IntegerField(default=0)
-    light_start = models.TimeField()
-    light_stop = models.TimeField()
+    light_start = models.TimeField(blank=True, null=False)
+    light_stop = models.TimeField(blank=True, null=False)
     lights_on = None
     goal_temp = models.IntegerField(default=0)
     goal_humid = models.IntegerField(default=0)
@@ -32,9 +33,9 @@ class Reservoir(models.Model):
     res_change_date = models.DateField(default=None, null=False, blank=True)
     goal_ph_low = models.IntegerField(default=0)
     goal_ph_high = models.IntegerField(default=0)
-    ph_alert_sent = False
-    ppm_alert_sent = False
-    res_change_alert = False
+    ph_alert_sent = models.NullBooleanField(default=False)
+    ppm_alert_sent = models.NullBooleanField(default=False)
+    res_change_alert = models.NullBooleanField(default=False)
 
     def __str__(self):
         return "Plot zone #" + str(self.plot.id) + "'s Reservoir #" + str(self.id)
@@ -47,7 +48,7 @@ class AlertEmail(models.Model):
     fromaddr = 'hydroponicsalert@gmail.com'
     toaddrs = 'maddencs@gmail.com'
     msg = models.CharField(max_length=3000)
-    sent = False
+    sent = models.BooleanField(default=False)
 
 
 class ReservoirForm(forms.ModelForm):
@@ -68,3 +69,8 @@ class PlotForm(forms.ModelForm):
         model = PlotZone
         # fields = ('light_start', 'light_stop', 'goal_temp')
         exclude = ('current_temp', 'lights_on', 'current_humid', )
+
+
+class Sensors(models.Model):
+
+    type = models.CharField(max_length=50, choices=CHOICES)
