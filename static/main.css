@@ -1,10 +1,10 @@
-div .PlotBox{
-    position:relative;
-    /*width:50%;*/
-    height:50%;
-    background: radial-gradient(red 5%, green 15%, blue 60%);
-    color:gold;
-    font-weight:bold;
+.ReservoirList {
+    width: auto;
+    height: 40%;
+    text-align: right;
+    display: block;
+    padding: 1em;
+    margin: 1em;
 }
 
 ul .ReservoirDetails {
@@ -12,9 +12,14 @@ ul .ReservoirDetails {
     border-style: outset;
     border-color: #3c763d;
     text-align:right;
-    width:80%;
+    display: inline-block;
     margin: 0;
     box-shadow: 3px;
+    display: inline-block;
+}
+
+section {
+    display: block;
 }
 
 h1 {
@@ -25,7 +30,7 @@ h1 {
 }
 
 body{
-    background-color: sienna;
+    background-color: #7A2900;
 }
 div .current_stats {
 
@@ -53,15 +58,12 @@ a:link {
     font-weight: bold;
 }
 article {
-    width: 40%;
+    width: auto;
     background: linear-gradient(125deg, darkgreen, forestgreen);
-    border-radius: 0px 20px 30px 40px;
+    border-radius: 5px 100px 0px 125px;
     margin-bottom: 10px;
     padding-bottom: 5px;
     position: relative;
-}
-
-li {
     display: inline-block;
-    width: 50%;
+    height: 100%;
 }

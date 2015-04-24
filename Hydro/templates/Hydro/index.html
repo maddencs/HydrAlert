@@ -11,11 +11,17 @@
 </head>
 <body>
     <header><h1>Hydro</h1></header>
+    <section>
     {% if plot_list %}
         {% for plot in plot_list %}
         <article>
             <div class="PlotBox">
-             <a href="/Hydro/{{ plot.id }}/plotmod/">Plot ID: {{ plot.id }}</a><br>
+             <a href="/Hydro/{{ plot.id }}/plotmod/"><h3>Plot ID: {{ plot.id }}</h3></a><br>
+                Light Status: {% if plot.lights_on == True %} <img src="{% static 'icons_lights_green.png' %}">
+                {% elif plot.lights_on == False %}<img src="{% static 'icons_lights_red.png' %}"> {% endif %}
+                {% if plot.plot_comments != "" %}
+                <br>Plot Comments: {{ plot.plot_comments }}
+                {% endif %}
                 <ul class="ReservoirList">
                     {% for reservoir in plot.reservoir_set.all %}
                     <li class="Reservoir ID"><a href="/Hydro/{{ reservoir.id }}/resmod/">Reservoir ID: {{ reservoir.id }}</a></li>
@@ -38,5 +44,6 @@
         {% else %}
         <strong>There are no plots yet.</strong>
     {% endif %}
+    </section>
 </body>
 </html>
