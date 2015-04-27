@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'Hydro',
     'datetimewidget',
+
 )
 
 MIDDLEWARE_CLASSES = (

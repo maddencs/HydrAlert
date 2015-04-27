@@ -41,9 +41,15 @@ def light_check(plot_object, curr_time):
 
 def reset_alerts():
     for Plot in PlotZone.objects.all():
-        Plot.temp_alert_sent, Plot.light_alert_sent, Plot.humid_alert_sent = False
-        for res in Plot.Reservoir_set.all():
-            res.ph_alert_sent, res.ppm_alert, res.res_change_alert = False
+        Plot.temp_alert_sent = False
+        Plot.light_alert_sent = False
+        Plot.humid_alert_sent = False
+        Plot.save()
+        for res in Plot.reservoir_set.all():
+            res.ph_alert_sent = False
+            res.ppm_alert_sent = False
+            res.res_change_alert = False
+            res.save()
 
 
 if __name__ == '__main__':

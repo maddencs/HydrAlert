@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+{% load staticfiles %}
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    {{ form.media }}
+    <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}"/>
+</head>
+<body>
+    <header><h1>HydroAlert</h1></header>
+    <div class="current_stats">
+        <ul>
+            <li></li>
+        </ul>
+    </div>
+
+    <div class="mod_stats">
+        <form id="res_form" method="post" action="/Hydro/{{ plot_id }}/add_res/">
+            {% csrf_token %}
+            {{ form|linebreaksbr }}
+            <input type="submit" name="submit" value="Update" />
+        </form>
+    </div>
+</body>
+</html>

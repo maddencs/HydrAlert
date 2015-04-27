@@ -20,15 +20,26 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='PlotSensors',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('port', models.CharField(max_length=20, null=True, blank=True)),
+                ('type', models.CharField(max_length=50, choices=[(b'3', b'Temp/Humid Sensor'), (b'4', b'Light Sensor')])),
+                ('light_status', models.NullBooleanField()),
+                ('current_temp', models.IntegerField(default=0)),
+                ('current_humid', models.IntegerField(default=0)),
+            ],
+        ),
+        migrations.CreateModel(
             name='PlotZone',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=40, blank=True)),
-                ('plot_comments', models.CharField(max_length=3000, blank=True)),
+                ('plot_comments', models.CharField(max_length=500, blank=True)),
                 ('current_temp', models.IntegerField(default=0)),
                 ('current_humid', models.IntegerField(default=0)),
-                ('light_start', models.TimeField(blank=True)),
-                ('light_stop', models.TimeField(blank=True)),
+                ('light_start', models.TimeField(null=True, blank=True)),
+                ('light_stop', models.TimeField(null=True, blank=True)),
                 ('lights_on', models.BooleanField(default=True)),
                 ('goal_temp', models.IntegerField(default=0)),
                 ('goal_humid', models.IntegerField(default=0)),
@@ -41,7 +52,7 @@ class Migration(migrations.Migration):
             name='Reservoir',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('reservoir_comments', models.CharField(max_length=3000, blank=True)),
+                ('reservoir_comments', models.CharField(max_length=300, blank=True)),
                 ('current_ph', models.FloatField(default=0)),
                 ('current_ppm', models.IntegerField(default=0)),
                 ('res_change_date', models.DateField(default=None, blank=True)),
@@ -54,11 +65,20 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='Sensors',
+            name='ResSensors',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('type', models.CharField(max_length=50, choices=[(b'1', b'PPM Sensor'), (b'2', b'pH Sensor'), (b'3', b'Temp/Humid Sensor'), (b'4', b'Light Sensor')])),
+                ('port', models.CharField(max_length=20, null=True, blank=True)),
+                ('type', models.CharField(max_length=50, choices=[(b'1', b'PPM Sensor'), (b'2', b'pH Sensor')])),
+                ('current_ph', models.FloatField()),
+                ('current_ppm', models.FloatField()),
+                ('res', models.ForeignKey(to='Hydro.Reservoir')),
             ],
+        ),
+        migrations.AddField(
+            model_name='plotsensors',
+            name='plot',
+            field=models.ForeignKey(to='Hydro.PlotZone'),
         ),
         migrations.AddField(
             model_name='alertemail',

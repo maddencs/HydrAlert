@@ -9,8 +9,9 @@ django.setup()
 import smtplib
 from Hydro.models import AlertEmail, PlotZone, Reservoir
 from datetime import datetime
-from hydrolib import within_range, light_check
+from hydrolib import within_range, light_check, reset_alerts
 from django.utils import timezone
+
 
 USE_TZ = True
 SERVER = smtplib.SMTP("smtp.gmail.com", 587)
@@ -73,4 +74,4 @@ def send_email(email):
 
 
 if __name__ == '__main__':
-    check_stats()
+    reset_alerts()

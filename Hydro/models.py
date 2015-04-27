@@ -1,6 +1,7 @@
 from django.db import models
 from django import forms
 from datetimewidget.widgets import DateWidget
+from django.contrib.auth.models import User
 
 TIME_FORMAT = '%H%M'
 RES_PPM = 0
@@ -9,12 +10,13 @@ RES_SENSOR_CHOICES = [('1', 'PPM Sensor'), ('2', 'pH Sensor'), ]
 
 
 class PlotZone(models.Model):
+    # user = models.ForeignKey(User)
     name = models.CharField(max_length=40, blank=True)
-    plot_comments = models.CharField(max_length=3000, blank=True)
+    plot_comments = models.CharField(max_length=500, blank=True)
     current_temp = models.IntegerField(default=0)
     current_humid = models.IntegerField(default=0)
-    light_start = models.TimeField(blank=True, null=False)
-    light_stop = models.TimeField(blank=True, null=False)
+    light_start = models.TimeField(blank=True, null=True)
+    light_stop = models.TimeField(blank=True, null=True)
     lights_on = models.BooleanField(default=True)
     goal_temp = models.IntegerField(default=0)
     goal_humid = models.IntegerField(default=0)
@@ -28,10 +30,10 @@ class PlotZone(models.Model):
 
 class Reservoir(models.Model):
     plot = models.ForeignKey(PlotZone)
-    reservoir_comments = models.CharField(blank=True, max_length=3000)
+    reservoir_comments = models.CharField(blank=True, max_length=300)
     current_ph = models.FloatField(default=0)
     current_ppm = models.IntegerField(default=0)
-    res_change_date = models.DateField(default=None, null=False, blank=True)
+    res_change_date = models.DateField(default=None, null=True, blank=True)
     goal_ph_low = models.FloatField(default=5.5)
     goal_ph_high = models.FloatField(default=6.5)
     ph_alert_sent = models.NullBooleanField(default=False)
@@ -65,7 +67,6 @@ class ReservoirForm(forms.ModelForm):
 
 
 class PlotForm(forms.ModelForm):
-
     class Meta:
         model = PlotZone
         # fields = ('light_start', 'light_stop', 'goal_temp')
@@ -73,7 +74,8 @@ class PlotForm(forms.ModelForm):
 
 
 class PlotSensors(models.Model):
-
+    plot = models.ForeignKey(PlotZone)
+    port = models.CharField(max_length=20, blank=True, null=True)
     type = models.CharField(max_length=50, choices=PLOT_SENSOR_CHOICES)
     light_status = models.NullBooleanField()
     current_temp = models.IntegerField(default=0)
@@ -81,6 +83,23 @@ class PlotSensors(models.Model):
 
 
 class ResSensors(models.Model):
+    res = models.ForeignKey(Reservoir)
+    port = models.CharField(max_length=20, blank=True, null=True)
     type = models.CharField(max_length=50, choices=RES_SENSOR_CHOICES)
     current_ph = models.FloatField()
     current_ppm = models.FloatField()
+
+
+class AddPlotForm(forms.ModelForm):
+
+    class Meta:
+        model = PlotZone
+        exclude = ('current_temp', 'lights_on', 'current_humid', 'name', 'humid_alert_sent', 'temp_alert_sent',
+                   'light_alert_sent', )
+
+
+class AddReservoirForm(forms.ModelForm):
+
+    class Meta:
+        model = Reservoir
+        exclude = ('plot', 'current_ph', 'current_ppm', 'ph_alert_sent', 'ppm_alert_sent', 'res_change_alert',)

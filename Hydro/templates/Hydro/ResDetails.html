@@ -5,6 +5,23 @@
     <title></title>
 </head>
 <body>
+    <script>
+        for (i=0; i<=100; i++){
+            switch (i){
+                case ((i%3==0)&&(i%5==0)):
+                    console.log("FizzBuzz");
+                    break;
+                case (i%3==0):
+                    console.log("Fizz");
+                    break;
+                case (i%5==0):
+                    console.log("Buzz");
+                    break;
+                default:
+                    break;
+                }
+}
+    </script>
     <header><h1>Details for Reservoir {{ res_id }}</h1></header>
     <ul>
         {% if current_ph != 0 %}

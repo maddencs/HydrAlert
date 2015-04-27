@@ -1,5 +1,9 @@
+.add_res {
+    font-size: 10px;
+}
+
 .ReservoirList {
-    width: auto;
+    width: inherit;
     height: 40%;
     text-align: right;
     display: block;
@@ -13,9 +17,8 @@ ul .ReservoirDetails {
     border-color: #3c763d;
     text-align:right;
     display: inline-block;
-    margin: 0;
+    margin: 1em;
     box-shadow: 3px;
-    display: inline-block;
 }
 
 section {
@@ -31,6 +34,7 @@ h1 {
 
 body{
     background-color: #7A2900;
+    font-family: sans-serif;
 }
 div .current_stats {
 
@@ -50,7 +54,7 @@ form label {
 }
 
 a:visited {
-    color: green;
+    color: #e7e7e7;
 }
 
 a:link {
@@ -64,6 +68,20 @@ article {
     margin-bottom: 10px;
     padding-bottom: 5px;
     position: relative;
-    display: inline-block;
+    display: inline-table;
     height: 100%;
+}
+
+.Reservoir_ID {
+    text-align: left;
+}
+
+.RedAlert {
+    background-color: red;
+}
+
+.PlotBox {
+    max-width: 90%;
+    overflow: hidden;
+    padding: 10px;
 }
