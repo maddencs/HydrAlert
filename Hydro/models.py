@@ -1,6 +1,4 @@
 from django.db import models
-from django import forms
-from datetimewidget.widgets import TimeWidget, DateWidget
 from django.contrib.auth.models import User
 
 TIME_FORMAT = '%H%M'
@@ -54,25 +52,6 @@ class AlertEmail(models.Model):
     sent = models.BooleanField(default=False)
 
 
-class ReservoirForm(forms.ModelForm):
-    # res_change_date = forms.DateField(required=False, widget=DateWidget(usel10n=True, bootstrap_version=3))
-
-    class Meta:
-        model = Reservoir
-        exclude = ('current_ph', 'current_ppm', 'plot', 'plot_id')
-        widgets = {
-            # Use localization and bootstrap 3
-            'datetime': DateWidget(attrs={'id': "yourdatetimeid"}, usel10n=True, bootstrap_version=3)
-        }
-
-
-class PlotForm(forms.ModelForm):
-    class Meta:
-        model = PlotZone
-        # fields = ('light_start', 'light_stop', 'goal_temp')
-        exclude = ('current_temp', 'lights_on', 'current_humid', )
-
-
 class PlotSensors(models.Model):
     plot = models.ForeignKey(PlotZone)
     port = models.CharField(max_length=20, blank=True, null=True)
@@ -88,22 +67,3 @@ class ResSensors(models.Model):
     type = models.CharField(max_length=50, choices=RES_SENSOR_CHOICES)
     current_ph = models.FloatField()
     current_ppm = models.FloatField()
-
-
-class AddPlotForm(forms.ModelForm):
-
-    class Meta:
-        model = PlotZone
-        exclude = ('current_temp', 'lights_on', 'current_humid', 'name', 'humid_alert_sent', 'temp_alert_sent',
-                   'light_alert_sent', 'user', )
-        # widgets = {
-        #     'light_start': TimeWidget( usel10n = True, bootstrap_version=3),
-        #     'light_stop': TimeWidget( usel10n = True, bootstrap_version=3),
-        #     'date': DateWidget( usel10n=True, bootstrap_version=3),
-        # }
-
-class AddReservoirForm(forms.ModelForm):
-
-    class Meta:
-        model = Reservoir
-        exclude = ('plot', 'current_ph', 'current_ppm', 'ph_alert_sent', 'ppm_alert_sent', 'res_change_alert',)

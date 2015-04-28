@@ -40,6 +40,7 @@
 </head>
 <body>
     <header><h1>Hydro</h1></header>
+    {% csrf_token %}
     <section class="container" ng-app="myApp" ng-controller="plotCtrl">'
         <div>
         <article id="PlotBox">
