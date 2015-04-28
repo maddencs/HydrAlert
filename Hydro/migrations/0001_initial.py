@@ -42,7 +42,7 @@ class Migration(migrations.Migration):
                 ('current_humid', models.IntegerField(default=0)),
                 ('light_start', models.TimeField(null=True, blank=True)),
                 ('light_stop', models.TimeField(null=True, blank=True)),
-                ('lights_on', models.BooleanField(default=True)),
+                ('light_status', models.BooleanField(default=True)),
                 ('goal_temp', models.IntegerField(default=0)),
                 ('goal_humid', models.IntegerField(default=0)),
                 ('humid_alert_sent', models.NullBooleanField(default=False)),

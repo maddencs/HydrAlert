@@ -11,11 +11,8 @@ def modify_res(request, reservoir_id):
     except Reservoir.DoesNotExist:
         r = None
 
-    comments = r.reservoir_comments
-    upper_ph = r.goal_ph_high
-    lower_ph = r.goal_ph_low
-    res_id = r.id
-    prepop_data = {'upper_ph': upper_ph, 'lower_ph': lower_ph, 'res_id': res_id,'comments': comments}
+    prepop_data = {'goal_ph_high': r.goal_ph_high, 'goal_ph_low': r.goal_ph_low, 'res_id': r.id,
+                   'comments': r.reservoir_comments, 'res_change_date': r.res_change_date}
     if request.method == 'POST':
         form = ReservoirForm(request.POST, instance=r)
         if form.is_valid():
@@ -26,7 +23,8 @@ def modify_res(request, reservoir_id):
     else:
         form = ReservoirForm(instance=r, initial=prepop_data)
 
-    context = {'form': form, 'upper_ph': upper_ph, 'lower_ph': lower_ph, 'res_id': res_id, 'comments': comments}
+    context = {'form': form, 'goal_ph_high': r.goal_ph_high, 'goal_ph_low': r.goal_ph_low, 'res_id': r.id,
+               'comments': r.reservoir_comments, 'res_change_date': r.res_change_date}
     return render(request, 'Hydro/modify_res.html', context)
 
 
@@ -100,7 +98,8 @@ class ReservoirForm(forms.ModelForm):
 
     class Meta:
         model = Reservoir
-        exclude = ('current_ph', 'current_ppm', 'plot', 'plot_id')
+        exclude = ('current_ph', 'current_ppm', 'plot', 'plot_id', 'ph_alert_sent', 'ppm_alert_sent',
+                   'res_change_alert', )
         widgets = {
             # Use localization and bootstrap 3
             'datetime': DateWidget(attrs={'id': "yourdatetimeid"}, usel10n=True, bootstrap_version=3)
@@ -151,6 +150,7 @@ class AddReservoirForm(forms.ModelForm):
             'format': 'yyyy/mm/dd',
             'autoclose': True,
             'clearBtn': True,
+            'todayHighlight': True,
         }
 
         widgets = {

@@ -7,35 +7,6 @@
     <title></title>
     <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}"/>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <script>
-        var request = new XMLHttpRequest();
-
-{#        function alertStatus(el_id) {#}
-{#            document.getElementsByClassName("PlotBox").classList.add("RedAlert")#}
-{#        }#}
-
-        drawData = function(data) {
-            {#        var data_field = document.getElementById("Reservoir_Details");#}
-            for (var i = 0; i < data.length; i++) {
-                var item = data[i];
-                var stat_field = document.getElementById("current_ph");
-                stat_field.innerHTML = item.current_ph;
-            }
-        }
-
-        function onRequestChange() {
-            if ((request.readyState == 4) && (request.status == 200)){
-                var data = JSON.parse(request.responseText);
-                drawData(data)
-        }
-        function fetchData() {
-            request.onreadystatechange = onRequestChange();
-            request.open("GET", "{% static 'hydro.json' %}", true);
-            request.send()
-        }
-    setTimeout(drawData, 1000);
-    setTimeout(fetchData, 1000);
-    </script>
     <script src ="{% static angular.js %}"></script>
 </head>
 <body>

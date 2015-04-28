@@ -15,7 +15,7 @@ class PlotZone(models.Model):
     current_humid = models.IntegerField(default=0)
     light_start = models.TimeField(blank=True, null=True)
     light_stop = models.TimeField(blank=True, null=True)
-    lights_on = models.BooleanField(default=True)
+    light_status = models.BooleanField(default=True)
     goal_temp = models.IntegerField(default=0)
     goal_humid = models.IntegerField(default=0)
     humid_alert_sent = models.NullBooleanField(default=False)
