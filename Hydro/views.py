@@ -1,5 +1,4 @@
 from django.shortcuts import render, get_object_or_404, HttpResponse, redirect
-from django.views import generic
 from .models import Reservoir, PlotZone, ReservoirForm, PlotForm, AddPlotForm, AddReservoirForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
@@ -28,10 +27,8 @@ def login_view(request):
             if user.is_active:
                 login(request, user)
                 #redirect to a success page
-                print("Redirect to a success page.")
-                redirect('about')
+                return redirect('plot_list')
             else:
-                #return a disabled account error message
                 message = "Inactive User"
         else:
             #return invalid login message
@@ -40,12 +37,16 @@ def login_view(request):
     return render(request, 'Hydro/login.html', {'message': message})
 
 
-class IndexView(generic.ListView):
-    template_name = 'Hydro/index.html'
-    context_object_name = 'plot_list'
-
-    def get_queryset(self):
-        return PlotZone.objects.order_by('id')
+def plot_list(request):
+    current_user = request.user.id
+    in_plot_list = []
+    for plot in PlotZone.objects.all():
+        if plot.user.id == current_user:
+            in_plot_list.append(plot)
+        else:
+            pass
+    context = {'plot_list': in_plot_list}
+    return render(request, 'Hydro/index.html', context)
 
 
 
@@ -117,12 +118,12 @@ def modify_plot(request, plot_id):
 
 
 def add_plot_page(request):
-    p = PlotZone()
+    p = PlotZone(user=request.user)
     if request.method == 'POST':
         form = AddPlotForm(request.POST, instance=p)
         if form.is_valid():
             form.save()
-            return redirect('index')
+            return redirect('plot_list')
         else:
             print form.errors
     else:

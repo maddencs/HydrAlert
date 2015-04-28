@@ -6,15 +6,13 @@ import django
 
 django.setup()
 
-import smtplib
 from Hydro.models import AlertEmail, PlotZone, Reservoir
 from datetime import datetime
-from hydrolib import within_range, light_check, reset_alerts
+from hydrolib import within_range, light_check, reset_alerts, send_email
 from django.utils import timezone
 
 
 USE_TZ = True
-SERVER = smtplib.SMTP("smtp.gmail.com", 587)
 
 
 def check_stats():
@@ -56,21 +54,6 @@ def check_stats():
                                                                       "out of range of your goal temp of %s")
                 send_email(email)
                 plot.light_alert_sent = True
-
-
-def send_email(email):
-
-    if not email.sent:
-        msg = email.msg
-        server = SERVER
-        try:
-            server.starttls()
-        except smtplib.SMTPException:
-            server.login('hydroponicsalert', 'HydroPass')
-            server.sendmail(email.fromaddr, email.toaddrs, msg)
-            email.sent = True
-    else:
-        pass
 
 
 if __name__ == '__main__':

@@ -4,8 +4,8 @@ from Hydro import views
 
 
 urlpatterns = patterns('',
-                       url(r'^$', views.IndexView.as_view(), name='index'),
-                       url(r'^about/$', views.IndexView.as_view(), name='about'),
+                       url(r'^$', views.plot_list, name='login'),
+                       url(r'^about/$', views.plot_list, name='about'),
                        url(r'^login/$', views.login_view, name='login'),
                        url(r'^register/$', views.register, name='register'),
                        url(r'^(?P<reservoir_id>[0-9]+)/details/$', views.details, name='details'),

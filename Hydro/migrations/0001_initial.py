@@ -2,11 +2,13 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+from django.conf import settings
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
@@ -46,6 +48,7 @@ class Migration(migrations.Migration):
                 ('humid_alert_sent', models.NullBooleanField(default=False)),
                 ('temp_alert_sent', models.NullBooleanField(default=False)),
                 ('light_alert_sent', models.NullBooleanField(default=False)),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
@@ -55,7 +58,7 @@ class Migration(migrations.Migration):
                 ('reservoir_comments', models.CharField(max_length=300, blank=True)),
                 ('current_ph', models.FloatField(default=0)),
                 ('current_ppm', models.IntegerField(default=0)),
-                ('res_change_date', models.DateField(default=None, blank=True)),
+                ('res_change_date', models.DateField(default=None, null=True, blank=True)),
                 ('goal_ph_low', models.FloatField(default=5.5)),
                 ('goal_ph_high', models.FloatField(default=6.5)),
                 ('ph_alert_sent', models.NullBooleanField(default=False)),

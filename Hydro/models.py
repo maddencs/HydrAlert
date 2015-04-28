@@ -1,6 +1,6 @@
 from django.db import models
 from django import forms
-from datetimewidget.widgets import DateWidget
+from datetimewidget.widgets import TimeWidget, DateWidget
 from django.contrib.auth.models import User
 
 TIME_FORMAT = '%H%M'
@@ -10,7 +10,7 @@ RES_SENSOR_CHOICES = [('1', 'PPM Sensor'), ('2', 'pH Sensor'), ]
 
 
 class PlotZone(models.Model):
-    # user = models.ForeignKey(User)
+    user = models.ForeignKey(User)
     name = models.CharField(max_length=40, blank=True)
     plot_comments = models.CharField(max_length=500, blank=True)
     current_temp = models.IntegerField(default=0)
@@ -95,8 +95,12 @@ class AddPlotForm(forms.ModelForm):
     class Meta:
         model = PlotZone
         exclude = ('current_temp', 'lights_on', 'current_humid', 'name', 'humid_alert_sent', 'temp_alert_sent',
-                   'light_alert_sent', )
-
+                   'light_alert_sent', 'user', )
+        # widgets = {
+        #     'light_start': TimeWidget( usel10n = True, bootstrap_version=3),
+        #     'light_stop': TimeWidget( usel10n = True, bootstrap_version=3),
+        #     'date': DateWidget( usel10n=True, bootstrap_version=3),
+        # }
 
 class AddReservoirForm(forms.ModelForm):
 

@@ -12,10 +12,13 @@
     <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}"/>
 </head>
 <body>
-    <header><h1>HydroAlert</h1></header>
+    <header><h1>HydroAlert</h1>
+    <h3>Plot {{ plot_id }}</h3></header>
     <div class="current_stats">
         <ul>
-            <li></li>
+            <li>Light Status: {{ plot.lights_on }}</li>
+            <li>Current Temp: {{ plot.current_temp }}</li>
+            <li>Current Humidity: {{ plot.current_humid }}</li>
         </ul>
     </div>
 
@@ -23,7 +26,7 @@
         <form id="plot_form" method="post" action="/Hydro/{{ plot_id }}/plotmod/">
             {% csrf_token %}
             {{ form|linebreaksbr }}
-            <input type="submit" name="submit" value="Update" />
+            <input type="submit" value="Change Goals" />
         </form>
     </div>
 </body>

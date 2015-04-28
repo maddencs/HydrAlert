@@ -7,8 +7,11 @@ import django
 django.setup()
 
 from django.http import HttpResponse
-from Hydro.models import PlotZone, Reservoir
+from Hydro.models import PlotZone
 from datetime import datetime
+import smtplib
+
+SERVER = smtplib.SMTP("smtp.gmail.com", 587)
 
 
 def within_range(goal, current, fail_limit):
@@ -57,3 +60,18 @@ if __name__ == '__main__':
     plot.save()
     current_time = datetime.now().time()
     print light_check(plot, current_time)
+
+
+def send_email(email):
+
+    if not email.sent:
+        msg = email.msg
+        server = SERVER
+        try:
+            server.starttls()
+        except smtplib.SMTPException:
+            server.login('hydroponicsalert', 'HydroPass')
+            server.sendmail(email.fromaddr, email.toaddrs, msg)
+            email.sent = True
+    else:
+        pass
