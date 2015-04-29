@@ -15,7 +15,7 @@ ul .ReservoirDetails {
     background-color: slategrey;
     border-style: outset;
     border-color: #3c763d;
-    text-align:right;
+    /*text-align:right;*/
     display: inline-block;
     margin: 1em;
     box-shadow: 3px;
@@ -61,7 +61,7 @@ a:link {
     color: #c0a16b;
     font-weight: bold;
 }
-article {
+.PlotBox {
     width: auto;
     background: linear-gradient(125deg, darkgreen, forestgreen);
     border-radius: 5px 100px 0px 125px;

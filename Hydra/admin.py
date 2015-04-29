@@ -1,5 +1,5 @@
 from django.contrib import admin
-from Hydro.models import PlotZone, Reservoir
+from Hydra.models import PlotZone, Reservoir
 
 
 admin.site.register(PlotZone)

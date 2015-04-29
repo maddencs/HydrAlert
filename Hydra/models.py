@@ -47,7 +47,7 @@ class AlertEmail(models.Model):
     res = models.ForeignKey(Reservoir)
     plot_zone = models.ForeignKey(PlotZone)
     fromaddr = 'hydroponicsalert@gmail.com'
-    toaddrs = 'maddencs@gmail.com'
+    toaddrs = ''
     msg = models.CharField(max_length=3000)
     sent = models.BooleanField(default=False)
 

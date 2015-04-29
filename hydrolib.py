@@ -1,13 +1,13 @@
 import os
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'HydroAlert.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'HydrAlert.settings')
 
 import django
 
 django.setup()
 
 from django.http import HttpResponse
-from Hydro.models import PlotZone
+from Hydra.models import PlotZone
 from datetime import datetime
 import smtplib
 

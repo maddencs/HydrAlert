@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, url
 
-from Hydro import views
-from Hydro import forms
+from Hydra import views
+from Hydra import forms
 
 
 urlpatterns = patterns('',

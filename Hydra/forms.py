@@ -1,7 +1,7 @@
 from django import forms
 from django.shortcuts import render, get_object_or_404, redirect, HttpResponseRedirect
 from datetimewidget.widgets import TimeWidget, DateWidget
-from Hydro.models import Reservoir, PlotZone
+from Hydra.models import Reservoir, PlotZone
 
 
 def modify_res(request, reservoir_id):
@@ -25,7 +25,7 @@ def modify_res(request, reservoir_id):
 
     context = {'form': form, 'goal_ph_high': r.goal_ph_high, 'goal_ph_low': r.goal_ph_low, 'res_id': r.id,
                'comments': r.reservoir_comments, 'res_change_date': r.res_change_date}
-    return render(request, 'Hydro/modify_res.html', context)
+    return render(request, 'Hydra/modify_res.html', context)
 
 
 def modify_plot(request, plot_id):
@@ -55,7 +55,7 @@ def modify_plot(request, plot_id):
 
     context = {'form': form, 'plot_id': plot_id, 'plot_comments': plot_comments, 'light_start': light_start,
                'light_stop': light_stop, 'goal_temp': goal_temp, 'goal_humid': goal_humid, }
-    return render(request, 'Hydro/modify_plot.html', context)
+    return render(request, 'Hydra/modify_plot.html', context)
 
 
 def add_plot_page(request):
@@ -71,7 +71,7 @@ def add_plot_page(request):
         form = AddPlotForm()
 
     context = {'form': form,}
-    return render(request, 'Hydro/add_plot.html', context)
+    return render(request, 'Hydra/add_plot.html', context)
 
 
 def add_res_page(request, plot_id):
@@ -91,7 +91,7 @@ def add_res_page(request, plot_id):
         print("This is not your plot to add reservoirs to.")
 
     context = {"form": form, "plot_id": plot.id}
-    return render(request, 'Hydro/add_res.html', context)
+    return render(request, 'Hydra/add_res.html', context)
 
 
 class ReservoirForm(forms.ModelForm):

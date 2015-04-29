@@ -20,27 +20,27 @@ def register(request):
         print ("login")
         redirect("about")
 
-    return render(request, 'Hydro/register.html', {})
+    return render(request, 'Hydra/register.html', {})
 
 
 def login_view(request):
     message = ""
-    if request.user.is_authenticated:
-        return redirect('plot_list')
-    else:
-        if request.POST:
-            user = authenticate(username=request.POST['username'], password=request.POST['password'])
-            print(user)
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    return redirect('plot_list')
-                else:
-                    message = "Inactive User"
+    # if request.user.is_authenticated:
+    #     return redirect('plot_list')
+    # else:
+    if request.POST:
+        user = authenticate(username=request.POST['username'], password=request.POST['password'])
+        print(user)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return redirect('plot_list')
             else:
-                message = "Invalid Login"
+                message = "Inactive User"
+        else:
+            message = "Invalid Login"
 
-    return render(request, 'Hydro/login.html', {'message': message})
+    return render(request, 'Hydra/login.html', {'message': message})
 
 
 def plot_list(request):
@@ -52,7 +52,7 @@ def plot_list(request):
         else:
             pass
     context = {'plot_list': in_plot_list}
-    return render(request, 'Hydro/index.html', context)
+    return render(request, 'Hydra/index.html', context)
 
 
 def details(request, reservoir_id):
@@ -65,7 +65,7 @@ def details(request, reservoir_id):
     res_id = plot.id
     context = {'res_id': res_id, 'current_ppm': current_ppm, 'current_ph': current_ph, 'current_temp': current_temp,
                'current_humid': current_humid, }
-    return render(request, 'Hydro/ResDetails.html', context)
+    return render(request, 'Hydra/ResDetails.html', context)
 
 
 def data_grab(request):
@@ -87,4 +87,4 @@ def data_grab(request):
 
 
 def new_plotlist(request):
-    return render(request, 'Hydro/plot_page.html',{})
+    return render(request, 'Hydra/plot_page.html',{})

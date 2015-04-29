@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+
+{% load staticfiles %}
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}"/>
+</head>
+<body>
+<script>
+        var request = new XMLHttpRequest();
+
+        var draw = function(data) {
+            var plot_count = 0;
+            for (var p = 0; p < data['plot_list'].length; p++) {
+                plot_count++;
+                var plot = data['plot_list'][p];
+                var plotElement = document.createElement("article");
+                plotElement.classList.add('PlotBox');
+                var plotUrl = document.createElement("a");
+                plotUrl.setAttribute("href", ("/Hydra/" + plot.id + "/plotmod/"));
+                plotUrl.innerHTML = "Plot ID: " + plot_count;
+                plotElement.appendChild(plotUrl);
+{#                Beginning of reservoir data#}
+                var res_list = data['res_list'];
+                var resList = document.createElement("ul");
+                plotElement.appendChild(resList);
+                var res_personal_id = 0;
+                for (var r = 0; r < data['res_list'].length; r++) {
+                    var res = res_list[r];
+                    var res_ul = document.createElement('ul');
+                    plotElement.appendChild(res_ul);
+                    if(res.plot == plot.id) {
+                        res_personal_id++;
+{#                        Just in case I need this later#}
+{#                        var res_li_id = document.createElement("li");#}
+                        var resUrl = document.createElement("a");
+                        resUrl.setAttribute("href", ("/Hydra/" + res.id + "/resmod/"));
+                        resUrl.innerHTML = "Reservoir ID: " + res_personal_id;
+                        var res_li_ph = document.createElement("li");
+                        res_li_ph.innerHTML = "Current pH: " + res.current_ph;
+                        var res_li_ppm = document.createElement("li");
+                        res_li_ppm.innerHTML = "Current PPM: " + res.current_ppm;
+                        console.log(res_li_ph)
+                        resList.appendChild(resUrl);
+                        resList.appendChild(res_ul);
+                        res_ul.appendChild(res_li_ph);
+                        res_ul.appendChild(res_li_ppm);
+                        var br = document.createElement("br");
+                        resList.appendChild(br);
+                    }
+                }
+            document.body.appendChild(plotElement);
+            }
+        };
+
+        var onRequestChange = function() {
+            if ((request.readyState == 4) && (request.status == 200)) {
+                var data = JSON.parse(request.responseText);
+                draw(data);
+            }
+        };
+
+        var grabData = function () {
+            request.onreadystatechange = onRequestChange;
+            request.open("GET", "/Hydra/data_grab/", true);
+            request.send();
+        };
+        setTimeout(grabData, 0);
+    </script>
+
+</body>
+</html>

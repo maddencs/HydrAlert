@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../HydroAlert/.idea/HydroAlert.iml" filepath="$PROJECT_DIR$/../HydroAlert/.idea/HydroAlert.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../HydrAlert/.idea/HydrAlert.iml" filepath="$PROJECT_DIR$/../HydrAlert/.idea/HydrAlert.iml" />
     </modules>
   </component>
 </project>

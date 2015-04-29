@@ -37,7 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Hydro',
+    'Hydra',
     'datetimewidget',
 )
 
@@ -53,7 +53,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.locale.LocaleMiddleware',
 )
 
-ROOT_URLCONF = 'HydroAlert.urls'
+ROOT_URLCONF = 'HydrAlert.urls'
 
 TEMPLATES = [
     {
@@ -71,7 +71,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'HydroAlert.wsgi.application'
+WSGI_APPLICATION = 'HydrAlert.wsgi.application'
 
 
 # Database
@@ -107,9 +107,9 @@ STATIC_PATH = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = (
     STATIC_PATH,
 )
-TEMPLATE_PATH = os.path.join(BASE_DIR, 'HydroAlert/../Hydro/templates')
+TEMPLATE_PATH = os.path.join(BASE_DIR, 'HydrAlert/../Hydra/templates')
 
 TEMPLATE_DIRS = (
     TEMPLATE_PATH,
-    ('<workspace>/Hydro/',),
+    ('<workspace>/Hydra/',),
 )
