@@ -43,18 +43,6 @@ def login_view(request):
     return render(request, 'Hydra/login.html', {'message': message})
 
 
-def plot_list(request):
-    current_user = request.user.id
-    in_plot_list = []
-    for plot in PlotZone.objects.all():
-        if plot.user.id == current_user:
-            in_plot_list.append(plot)
-        else:
-            pass
-    context = {'plot_list': in_plot_list}
-    return render(request, 'Hydra/index.html', context)
-
-
 def details(request, reservoir_id):
     r = get_object_or_404(Reservoir, pk=reservoir_id)
     current_ppm = r.current_ppm
@@ -86,5 +74,5 @@ def data_grab(request):
                         content_type='application/json')
 
 
-def new_plotlist(request):
-    return render(request, 'Hydra/plot_page.html',{})
+def plot_list(request):
+    return render(request, 'Hydra/plot_page.html', {})

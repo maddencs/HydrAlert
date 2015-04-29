@@ -15,5 +15,4 @@ urlpatterns = patterns('',
                        url(r'^add_plot/$', forms.add_plot_page, name='add_plot'),
                        url(r'^(?P<plot_id>[0-9]+)/add_res/$', forms.add_res_page, name='add_res'),
                        url(r'^data_grab/$', views.data_grab, name='data_grab'),
-                       url(r'^new_plotlist/$', views.new_plotlist, name='new_plotlist'),
                        )

@@ -72,6 +72,10 @@ a:link {
     height: 100%;
 }
 
+.PlotMouseOver {
+    background: linear-gradient(280deg, seagreen, darkolivegreen);
+}
+
 .Reservoir_ID {
     text-align: left;
 }
@@ -83,5 +87,26 @@ a:link {
 .PlotBox {
     max-width: 90%;
     overflow: hidden;
-    padding: 10px;
+    margin: 3px;
+    padding: 1em;
+}
+
+#menuBar {
+    text-align: center;
+}
+#menuBar li {
+    display: inline;
+    margin: 2em;
+    text-align: center;
+    background: linear-gradient(180deg, darkred, grey);
+    border-radius: 15px;
+    width: auto;
+    height: auto;
+}
+
+#logInDiv {
+    width: 100px;
+    height: 100px;
+    background: red;
+    display: none;
 }
