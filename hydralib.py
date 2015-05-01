@@ -55,13 +55,6 @@ def reset_alerts():
             res.save()
 
 
-if __name__ == '__main__':
-    plot = PlotZone.objects.get(pk=1)
-    plot.save()
-    current_time = datetime.now().time()
-    print light_check(plot, current_time)
-
-
 def send_email(email):
 
     if not email.sent:
@@ -75,3 +68,10 @@ def send_email(email):
             email.sent = True
     else:
         pass
+
+
+if __name__ == '__main__':
+    plot = PlotZone.objects.get(pk=1)
+    plot.save()
+    current_time = datetime.now().time()
+    print light_check(plot, current_time)

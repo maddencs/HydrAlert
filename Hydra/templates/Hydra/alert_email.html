@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <h3>Problem Plots</h3>
+    <ul>
+        {% for plot in plot_list %}
+            <li>{{ plot.id }} has a problem.</li>
+        {% endfor %}
+    </ul>
+    <h3>Problem Reservoirs</h3>
+    <ul>
+        {% for res in res_list %}
+            <li>{{ res.id }} has a problem.</li>
+        {% endfor %}
+    </ul>
+
+
+</body>
+</html>

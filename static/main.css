@@ -33,7 +33,7 @@ header {
 }
 
 body{
-    background-color: #7A2900;
+    background: linear-gradient(90deg, mediumblue, darkblue, dodgerblue);
     font-family: sans-serif;
 }
 div .current_stats {
@@ -53,47 +53,67 @@ form label {
     text-align: left;
 }
 
-a:visited {
-    color: #e7e7e7;
+
+a {
+    text-decoration: none;
 }
 
-a:link {
-    color: #c0a16b;
-    font-weight: bold;
-}
 .PlotBox {
     width: auto;
-    background: linear-gradient(125deg, darkgreen, forestgreen);
-    border-radius: 5px 100px 0px 125px;
+    background: linear-gradient(100deg, darkgreen, forestgreen);
+    border-radius: 5px 100px 0 125px;
     margin-bottom: 10px;
     padding-bottom: 5px;
     position: relative;
     display: inline-table;
     height: 100%;
+    box-shadow: 10px 10px 10px darkblue;
 }
 
-.PlotMouseOver {
-    background: linear-gradient(280deg, seagreen, darkolivegreen);
+.plotMouseOver {
+    background: linear-gradient(280deg, darkgreen, green);
 }
 
 .Reservoir_ID {
     text-align: left;
 }
 
-.RedAlert {
-    background-color: red;
+.plotAlert {
+    border-radius: 5px 100px 0px 125px;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    position: relative;
+    display: inline-table;
+    background: linear-gradient(280deg, red, darkred);
+    box-shadow: 10px 10px 10px darkblue;
+}
+
+.plotAlertMouseover {
+    background: linear-gradient(100deg, red, darkred);
+}
+
+.plotDetails{
+    margin: 1em;
 }
 
 .PlotBox {
     max-width: 90%;
     overflow: hidden;
-    margin: 3px;
+    margin: 1em;
     padding: 1em;
+    box-shadow: 10px 10px 10px darkblue
 }
 
 #menuBar {
     text-align: center;
 }
+
+#menuBar div {
+    text-align: center;
+    display: none;
+
+}
+
 #menuBar li {
     display: inline;
     margin: 2em;
@@ -105,8 +125,26 @@ a:link {
 }
 
 #logInDiv {
-    width: 100px;
-    height: 100px;
-    background: red;
+    display: none;
+    width: auto;
+    height: auto;
+}
+
+form {
+    /*display: inline-block;*/
+}
+
+#addPlotDiv {
+    display: none;
+}
+
+.resAlert {
+    background-color: yellow;
+    opacity: .9;
+    border-radius: 10px;
+    padding: 3px;
+}
+
+.addResDiv {
     display: none;
 }

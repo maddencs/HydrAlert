@@ -8,54 +8,96 @@
     <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}"/>
 </head>
 <body>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script>
 
         var request = new XMLHttpRequest();
+        var greenSrc = '{% static 'icons_lights_green.png' %}';
+        var redSrc = '{% static 'icons_lights_red.png' %}';
         var draw = function(data) {
-            var plot_personal_id = 1;
+            var plotPersonalID = 1;
+            document.getElementById('plotDiv').innerHTML = "";
             for (var p = 0; p < data['plot_list'].length; p++) {
+                var addRes = document.createElement("span");
                 var plot = data['plot_list'][p];
                 var plotElement = document.createElement("article");
-                var res_list = data['res_list'];
-                var resList = document.createElement("ul");
-                var res_personal_id = 1;
+                var resList = data['res_list'];
+                var plotResUL = document.createElement("ul");
+                var resPersonalID = 1;
                 var plotUrl = document.createElement("a");
-                plotElement.addEventListener("mouseover", function () {
-                    this.classList.add('PlotMouseOver');
-                });
-                plotElement.addEventListener("mouseout", function () {
-                    this.classList.remove('PlotMouseOver');
-                });
-                plotElement.classList.add('PlotBox');
+                var greenLight = document.createElement("img");
+                var redLight = document.createElement("img");
+                var plotLILights = document.createElement("span");
+                var plotDetails = document.createElement("div");
+                plotDetails.id = "plotDetails";
+                addRes.innerText = "Add Reservoir";
+                addRes.id = "addRes";
+                greenLight.setAttribute("src", greenSrc);
+                redLight.setAttribute("src", redSrc);
+                if( plot.alert_status == true ){
+                    plotElement.classList.add('plotAlert');
+                    plotElement.addEventListener("mouseover", function() {
+                        this.classList.add('plotAlertMouseover');
+                    });
+                    plotElement.addEventListener("mouseout", function() {
+                        this.classList.remove('plotAlertMouseover');
+                    });
+                   } else {
+                    plotElement.classList.add('PlotBox');
+                    plotElement.addEventListener("mouseover", function () {
+                        this.classList.add('plotMouseOver');
+                    });
+                    plotElement.addEventListener("mouseout", function () {
+                        this.classList.remove('plotMouseOver');
+                    });
+                }
                 plotUrl.setAttribute("href", ("/Hydra/" + plot.id + "/plotmod/"));
-                plotUrl.innerHTML = "Plot ID: " + plot_personal_id;
-                plotElement.appendChild(plotUrl);
-                plotElement.appendChild(resList);
-                plot_personal_id++;
-                for (var r = 0; r < data['res_list'].length; r++) {
-                    var res = res_list[r];
-                    var res_ul = document.createElement('ul');
-                    plotElement.appendChild(res_ul);
+                plotUrl.innerHTML = "Plot ID: " + plotPersonalID;
+                plotElement.appendChild(plotDetails);
+                plotDetails.appendChild(plotUrl);
+                var anotherBr = document.createElement("br");
+                plotDetails.appendChild(anotherBr);
+                plotDetails.appendChild(plotLILights);
+                plotDetails.appendChild(plotResUL);
+                if(plot.light_status == true){
+                    plotLILights.innerHTML = "Light Status: ";
+                    plotLILights.appendChild(greenLight);
+                } else {
+                    plotLILights.innerHTML = "Light Status: ";
+                    plotLILights.appendChild(redLight);
+                }
+                plotPersonalID++;
+                for (var r = 0; r < resList.length; r++) {
+                    var res = resList[r];
+                    var resUL = document.createElement('ul');
+                    plotElement.appendChild(resUL);
                     if (res.plot == plot.id) {
                         var resUrl = document.createElement("a");
-                        var res_li_ph = document.createElement("li");
-                        var res_li_ppm = document.createElement("li");
+                        var resLIpH = document.createElement("li");
+                        var resLIPPM = document.createElement("li");
                         var br = document.createElement("br");
+                        var resDiv = document.createElement("div");
+
+                        if (res.alert_status == true){
+                            resDiv.classList.add('resAlert');
+                        }
                         resUrl.setAttribute("href", ("/Hydra/" + res.id + "/resmod/"));
-                        resUrl.innerHTML = "Reservoir ID: " + res_personal_id;
-                        res_li_ph.innerHTML = "Current pH: " + res.current_ph;
-                        res_li_ppm.innerHTML = "Current PPM: " + res.current_ppm;
-                        resList.appendChild(resUrl);
-                        resList.appendChild(res_ul);
-                        resList.appendChild(br);
-                        res_ul.appendChild(res_li_ph);
-                        res_ul.appendChild(res_li_ppm);
-                        res_personal_id++;
+                        resUrl.innerHTML = "Reservoir ID: " + resPersonalID;
+                        resLIpH.innerHTML = "Current pH: " + res.current_ph;
+                        resLIPPM.innerHTML = "Current PPM: " + res.current_ppm;
+
+                        resDiv.appendChild(resUL);
+                        plotResUL.appendChild(resUrl);
+                        plotResUL.appendChild(resDiv);
+                        plotResUL.appendChild(br);
+                        resUL.appendChild(resLIpH);
+                        resUL.appendChild(resLIPPM);
+                        resPersonalID++;
                     }
                 }
 
                 document.getElementById('plotDiv').appendChild(plotElement);
+                setTimeout(grabData, 1000);
             }
         };
 
@@ -71,26 +113,78 @@
             request.open("GET", "/Hydra/data_grab/", true);
             request.send();
         };
-        setTimeout(grabData, 0);
+
+        setTimeout(grabData, 100);
     </script>
-    <script>
-        $( 'li.logIn').click(function(e){
-            $( this).parent().find('#logInDiv').toggle();
-        });
-    </script>
+
     <header>HydrA</header>
     <br>
     <div id="menuWrap">
         <ul id="menuBar">
             <li class="menuItem" id="plotPage">Plot List</li>
             <li class="menuItem" id="addPlot">Add Plot</li>
-            <li class="menuItem" id="logOut">Log Out</li>
-            <li class="menuItem" id="logIn">Log In
-                <div id="logInDiv">adsfasdf</div>
-            </li>
+            <li class="menuItem" id="addReservoir">Add Reservoir</li>
+{#            <li class="menuItem" id="logOut"><a href="/Hydra/logout/">Log Out</a></li>#}
+            <li class="menuItem" id="logOut"><a href="/Hydra/logout/">Logout</a></li>
+            <li class="menuItem" id="logIn">Log In</li>
             <li class="menuItem" id="changeInfo">Change Personal Info</li>
+            <div id="logInDiv">
+                <form action="/Hydra/login/" method="POST">
+                    {% csrf_token %}
+                    <label for="username">Username: </label>
+                    <input name="username" id="username" type="text">
+                    <label for="password">Password: </label>
+                    <input name="password" id="password" type="password">
+                    <input type="submit" value="Login">
+                </form>
+            </div>
+            <div id="addPlotDiv">
+                <form action="/Hydra/add_plot/" method="POST">
+                    {% csrf_token %}
+                    <label for="light_start">Lights Start Time: </label>
+                    <input id="light_start" name ="light_start" type="time">
+                    <label for="light_stop">Lights Stop Time: </label>
+                    <input id="light_stop" name="light_stop" type="time">
+                    <label for="goal_temp">Goal Temperature: </label>
+                    <input id="goal_temp" name="goal_temp" type="number" min="0" max="120">
+                    <label for="goal_humid">Goal Humidity: </label>
+                    <input id="goal_humid" name="goal_humid" type="number" min="0" max="100">
+                    <input type="submit" value="Create Plot">
+                </form>
+            </div>
+            <div id="addResDiv">
+                <form action="/Hydra/add_res/" method="POST">
+                    {% csrf_token %}
+                    <label for="plot">Plot: </label>
+                    <input id="plot" name="plot" type="number" min="0" max="{{ dropdown_plot_list.length }}">
+                    <label for="goal_ph_low">pH Lower Limit: </label>
+                    <input id="goal_ph_low" name="goal_ph_low" type="number" step=".1">
+                    <label for="goal_ph_high">pH Upper Limit: </label>
+                    <input id="goal_ph_high" name="goal_ph_high" type="number" step=".1">
+                    <label for="goal_ppm">Goal PPM: </label>
+                    <input id="goal_ppm" name="goal_ppm" type="number">
+                    <input type="submit" value="Add Reservoir">
+                </form>
+            </div>
         </ul>
     </div>
+    <h1>{{ message }}</h1>
     <div id="plotDiv"></div>
+    <script>
+{#        forms#}
+        $("li[id='logIn']").click(function(){
+            $("#logInDiv").toggle('slow');
+        });
+        $("li[id='addPlot']").click(function(){
+            $("#addPlotDiv").toggle('slow');
+        });
+        $("li[id='addReservoir']").click(function(){
+            $("#addResDiv").toggle('slow');
+        });
+{#        $("button[id='logOut']").click(function(){#}
+{#            request.open("POST", "/Hydra/logout/", true);#}
+{#            request.send();#}
+{#        })#}
+    </script>
 </body>
 </html>
