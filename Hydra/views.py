@@ -18,8 +18,6 @@ def register(request):
             print user.errors
 
         login(request, user)
-        print ("login")
-        redirect("about")
 
     return render(request, 'Hydra/register.html', {})
 
@@ -62,18 +60,18 @@ def details(request, reservoir_id):
 def data_grab(request):
     grab_plot_list = []
     grab_res_list = []
-    plot_list = PlotZone.objects.filter(user=request.user)
+    _plot_list = PlotZone.objects.filter(user=request.user)
 
-    for plot in plot_list:
+    for plot in _plot_list:
         grab_plot_list.append({'id': plot.id, 'comments': plot.plot_comments, 'light_start': str(plot.light_start),
                                'light_stop': str(plot.light_stop), 'current_temp': plot.current_temp,
                                'current_humid': plot.current_humid, 'goal_temp': plot.goal_temp,
                                'goal_humid': plot.goal_humid, 'light_status': plot.light_status,
-                               'alert_status': plot.alert_status})
+                               'alert_status': plot.alert_status, })
         for res in plot.reservoir_set.all():
             grab_res_list.append({'id': res.id, 'plot': res.plot_id, 'current_ph': res.current_ph,
                                   'current_ppm': res.current_ppm, 'goal_ph_low': res.goal_ph_low,
-                                  'goal_ph_high': res.goal_ph_high, 'alert_status': res.alert_status })
+                                  'goal_ph_high': res.goal_ph_high, 'alert_status': res.alert_status, })
 
     return HttpResponse(json.dumps({'plot_list': grab_plot_list, 'res_list': grab_res_list}, indent=4),
                         content_type='application/json')
@@ -83,8 +81,8 @@ def data_grab(request):
 def plot_list(request, **kwargs):
     context = {'message': ""}
     message = kwargs.pop('message', "")
-    plot_list = PlotZone.objects.all()
-    context['dropdown_plot_list'] = plot_list
+    main_plot_list = PlotZone.objects.all()
+    context['dropdown_plot_list'] = main_plot_list
     context['message'] = message
     return render(request, 'Hydra/plot_page.html', context)
 
@@ -98,17 +96,17 @@ def add_plot_page(request):
         p.goal_temp = request.POST['goal_temp']
         p.goal_humid = request.POST['goal_humid']
         p.save()
-    #     print request.POST
-    # return redirect('plot_list')
+        print request.POST
+    return redirect('plot_list')
 
 
 @login_required(login_url='/Hydra/login/')
 def add_res_page(request):
     message = {'message': ""}
     if request.method == 'POST':
-        plot_list = PlotZone.objects.filter(user=request.user)
+        res_plot_list = PlotZone.objects.filter(user=request.user)
         plot_id_list = []
-        for plot in plot_list:
+        for plot in res_plot_list:
             plot_id_list.append(plot.id)
         if int(request.POST['plot']) in plot_id_list:
             plot = PlotZone(pk=request.POST['plot'])
@@ -124,7 +122,7 @@ def add_res_page(request):
 
 
 def create_email(request, **kwargs):
-    plot_list = kwargs.pop('plot_list', [])
+    email_plot_list = kwargs.pop('plot_list', [])
     res_list = kwargs.pop('res_list', [])
-    context = {'plot_list': plot_list, 'res_list': res_list, }
+    context = {'plot_list': email_plot_list, 'res_list': res_list, }
     return render(request, 'Hydra/alert_email.html', context)

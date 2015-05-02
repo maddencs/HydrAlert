@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <title></title>
     <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}">
 </head>
 <body>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
@@ -34,6 +35,7 @@
                 addRes.id = "addRes";
                 greenLight.setAttribute("src", greenSrc);
                 redLight.setAttribute("src", redSrc);
+                plotElement.classList.add('col-md-4');
                 if( plot.alert_status == true ){
                     plotElement.classList.add('plotAlert');
                     plotElement.addEventListener("mouseover", function() {
@@ -52,7 +54,7 @@
                     });
                 }
                 plotUrl.setAttribute("href", ("/Hydra/" + plot.id + "/plotmod/"));
-                plotUrl.innerHTML = "Plot ID: " + plotPersonalID;
+                plotUrl.innerHTML = "Plot ID: " + plot.id;
                 plotElement.appendChild(plotDetails);
                 plotDetails.appendChild(plotUrl);
                 var anotherBr = document.createElement("br");
@@ -85,7 +87,8 @@
                         resUrl.innerHTML = "Reservoir ID: " + resPersonalID;
                         resLIpH.innerHTML = "Current pH: " + res.current_ph;
                         resLIPPM.innerHTML = "Current PPM: " + res.current_ppm;
-
+                        resLIpH.classList.add('col-md-4');
+                        resUL.classList.add('col-md-4');
                         resDiv.appendChild(resUL);
                         plotResUL.appendChild(resUrl);
                         plotResUL.appendChild(resDiv);

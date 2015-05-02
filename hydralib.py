@@ -15,7 +15,6 @@ SERVER = smtplib.SMTP("smtp.gmail.com", 587)
 
 
 def within_range(goal, current, fail_limit):
-    # multiply by 10 because pH is a float
     goal = int(goal*10)
     current = int(current*10)
     fail_limit = int(fail_limit*10)
