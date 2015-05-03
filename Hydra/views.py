@@ -126,3 +126,9 @@ def create_email(request, **kwargs):
     res_list = kwargs.pop('res_list', [])
     context = {'plot_list': email_plot_list, 'res_list': res_list, }
     return render(request, 'Hydra/alert_email.html', context)
+
+@login_required(login_url='/Hydra/login/')
+def delete_plot(request, plot_id):
+    p = PlotZone.objects.filter(id=plot_id)
+    p.delete()
+    return redirect('plot_list')

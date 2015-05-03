@@ -35,6 +35,7 @@ header {
 body{
     background: linear-gradient(90deg, mediumblue, darkblue, dodgerblue);
     font-family: sans-serif;
+    align-content: center;
 }
 div .current_stats {
 
@@ -57,6 +58,7 @@ form label {
 a {
     text-decoration: none;
 }
+
 
 .PlotBox {
     width: auto;
@@ -101,17 +103,16 @@ a {
     overflow: hidden;
     margin: 1em;
     padding: 1em;
-    box-shadow: 10px 10px 10px darkblue
+    box-shadow: 10px 10px 10px darkblue;
 }
 
 #menuBar {
-    text-align: center;
+    /*align-content: center;*/
 }
 
 #menuBar div {
-    text-align: center;
-    display: none;
-
+    /*text-align: center;*/
+    /*display: none;*/
 }
 
 #menuBar li {
@@ -130,13 +131,6 @@ a {
     height: auto;
 }
 
-form {
-    /*display: inline-block;*/
-}
-
-#addPlotDiv {
-    display: none;
-}
 
 .resAlert {
     background-color: yellow;
@@ -145,6 +139,34 @@ form {
     padding: 3px;
 }
 
-.addResDiv {
+#addResDiv {
     display: none;
+    z-index: 10;
+    position: relative;
+    /*width: 50%;*/
+}
+
+.plotResUL {
+    display: table;
+}
+
+#menuWrap {
+    z-index: 10;
+    /*text-align: center;*/
+    /*align-content: center;*/
+    position: relative;
+}
+
+#plotDiv {
+    z-index: 1;
+    position: relative;
+}
+
+
+#addPlotDiv {
+    display: none;
+}
+
+.form-control {
+    min-width: 0;
 }

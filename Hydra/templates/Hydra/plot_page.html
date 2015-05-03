@@ -19,20 +19,24 @@
             var plotPersonalID = 1;
             document.getElementById('plotDiv').innerHTML = "";
             for (var p = 0; p < data['plot_list'].length; p++) {
-                var addRes = document.createElement("span");
                 var plot = data['plot_list'][p];
                 var plotElement = document.createElement("article");
                 var resList = data['res_list'];
                 var plotResUL = document.createElement("ul");
+                plotResUL.classList.add('col-md-5');
                 var resPersonalID = 1;
                 var plotUrl = document.createElement("a");
                 var greenLight = document.createElement("img");
                 var redLight = document.createElement("img");
                 var plotLILights = document.createElement("span");
                 var plotDetails = document.createElement("div");
+                var plotDropDown = document.getElementById('plotDropDown');
+                var plotOption = document.createElement("option");
+                plotOption.innerHTML = plotPersonalID;
+                plotOption.value = plot.id;
+                plotOption.classList.add('col-md-2');
+                plotDropDown.appendChild(plotOption);
                 plotDetails.id = "plotDetails";
-                addRes.innerText = "Add Reservoir";
-                addRes.id = "addRes";
                 greenLight.setAttribute("src", greenSrc);
                 redLight.setAttribute("src", redSrc);
                 plotElement.classList.add('col-md-4');
@@ -54,13 +58,14 @@
                     });
                 }
                 plotUrl.setAttribute("href", ("/Hydra/" + plot.id + "/plotmod/"));
-                plotUrl.innerHTML = "Plot ID: " + plot.id;
+                plotUrl.innerHTML = "Plot ID: " + plotPersonalID;
                 plotElement.appendChild(plotDetails);
                 plotDetails.appendChild(plotUrl);
                 var anotherBr = document.createElement("br");
                 plotDetails.appendChild(anotherBr);
                 plotDetails.appendChild(plotLILights);
                 plotDetails.appendChild(plotResUL);
+                plotResUL.classList.add('list-unstyled');
                 if(plot.light_status == true){
                     plotLILights.innerHTML = "Light Status: ";
                     plotLILights.appendChild(greenLight);
@@ -71,36 +76,39 @@
                 plotPersonalID++;
                 for (var r = 0; r < resList.length; r++) {
                     var res = resList[r];
-                    var resUL = document.createElement('ul');
+                    var resUL = document.createElement('dl');
+                    resUL.classList.add('dl-horizontal');
                     plotElement.appendChild(resUL);
                     if (res.plot == plot.id) {
-                        var resUrl = document.createElement("a");
-                        var resLIpH = document.createElement("li");
-                        var resLIPPM = document.createElement("li");
+                        var resUrl = document.createElement("dt");
+                        var resLIpH = document.createElement("dt");
+                        var resLIPPM = document.createElement("dt");
                         var br = document.createElement("br");
-                        var resDiv = document.createElement("div");
+                        var resATag = document.createElement("a");
+                        var stat_pH = document.createElement("dd");
+                        var stat_ppm = document.createElement("dd");
+                        resATag.innerHTML = "Reservoir ID: " + resPersonalID;
+                        resUrl.appendChild(resATag);
 
-                        if (res.alert_status == true){
-                            resDiv.classList.add('resAlert');
-                        }
                         resUrl.setAttribute("href", ("/Hydra/" + res.id + "/resmod/"));
-                        resUrl.innerHTML = "Reservoir ID: " + resPersonalID;
-                        resLIpH.innerHTML = "Current pH: " + res.current_ph;
-                        resLIPPM.innerHTML = "Current PPM: " + res.current_ppm;
-                        resLIpH.classList.add('col-md-4');
-                        resUL.classList.add('col-md-4');
-                        resDiv.appendChild(resUL);
+                        resLIpH.innerHTML = "Current pH:";
+                        stat_pH.innerHTML = res.current_ph;
+                        resLIPPM.innerHTML = "Current PPM: ";
+                        stat_ppm.innerHTML = res.current_ppm;
+{#                        resUL.classList.add('list-unstyled');#}
                         plotResUL.appendChild(resUrl);
-                        plotResUL.appendChild(resDiv);
+                        plotResUL.appendChild(resUL);
                         plotResUL.appendChild(br);
                         resUL.appendChild(resLIpH);
+                        resUL.appendChild(stat_pH);
                         resUL.appendChild(resLIPPM);
+                        resUL.appendChild(stat_ppm);
                         resPersonalID++;
                     }
                 }
 
                 document.getElementById('plotDiv').appendChild(plotElement);
-                setTimeout(grabData, 1000);
+{#                setTimeout(grabData, 1000);#}
             }
         };
 
@@ -116,21 +124,18 @@
             request.open("GET", "/Hydra/data_grab/", true);
             request.send();
         };
-
-        setTimeout(grabData, 100);
+        grabData()
     </script>
 
     <header>HydrA</header>
-    <br>
-    <div id="menuWrap">
+        <div id="menuWrap">
         <ul id="menuBar">
-            <li class="menuItem" id="plotPage">Plot List</li>
-            <li class="menuItem" id="addPlot">Add Plot</li>
-            <li class="menuItem" id="addReservoir">Add Reservoir</li>
-{#            <li class="menuItem" id="logOut"><a href="/Hydra/logout/">Log Out</a></li>#}
-            <li class="menuItem" id="logOut"><a href="/Hydra/logout/">Logout</a></li>
-            <li class="menuItem" id="logIn">Log In</li>
-            <li class="menuItem" id="changeInfo">Change Personal Info</li>
+            <li id="plotPage">Plot List</li>
+            <li id="addPlot">Add Plot</li>
+            <li id="addReservoir">Add Reservoir</li>
+            <li id="logOut"><a href="/Hydra/logout/">Logout</a></li>
+            <li id="logIn">Log In</li>
+            <li id="changeInfo">Change Personal Info</li>
             <div id="logInDiv">
                 <form action="/Hydra/login/" method="POST">
                     {% csrf_token %}
@@ -155,11 +160,14 @@
                     <input type="submit" value="Create Plot">
                 </form>
             </div>
+        </ul>
             <div id="addResDiv">
-                <form action="/Hydra/add_res/" method="POST">
+                <form class="row2" action="/Hydra/add_res/" method="POST">
                     {% csrf_token %}
                     <label for="plot">Plot: </label>
-                    <input id="plot" name="plot" type="number" min="0" max="{{ dropdown_plot_list.length }}">
+                    <select id="plotDropDown" name="plot" class="form-control">
+                    </select>
+{#                    <input id="plot" name="plot" type="number" min="0" max="{{ dropdown_plot_list.length }}">#}
                     <label for="goal_ph_low">pH Lower Limit: </label>
                     <input id="goal_ph_low" name="goal_ph_low" type="number" step=".1">
                     <label for="goal_ph_high">pH Upper Limit: </label>
@@ -169,8 +177,8 @@
                     <input type="submit" value="Add Reservoir">
                 </form>
             </div>
-        </ul>
     </div>
+    <br>
     <h1>{{ message }}</h1>
     <div id="plotDiv"></div>
     <script>
@@ -184,10 +192,6 @@
         $("li[id='addReservoir']").click(function(){
             $("#addResDiv").toggle('slow');
         });
-{#        $("button[id='logOut']").click(function(){#}
-{#            request.open("POST", "/Hydra/logout/", true);#}
-{#            request.send();#}
-{#        })#}
     </script>
 </body>
 </html>
