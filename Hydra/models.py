@@ -1,10 +1,17 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+import os
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'HydrAlert.settings')
+
+import django
+
+django.setup()
+
 TIME_FORMAT = '%H%M'
 RES_PPM = 0
-PLOT_SENSOR_CHOICES = [('3', 'Temp/Humid Sensor'), ('4', 'Light Sensor'), ]
-RES_SENSOR_CHOICES = [('1', 'PPM Sensor'), ('2', 'pH Sensor'), ]
+SENSOR_CHOICES = [('ppm', 'PPM Sensor'), ('pH', 'pH Sensor'), ('temp', 'Temp/Humid Sensor'), ('light', 'Light Sensor'), ]
 
 
 class PlotZone(models.Model):
@@ -57,18 +64,38 @@ class AlertEmail(models.Model):
     res_alerts = []
 
 
-class PlotSensors(models.Model):
-    plot = models.ForeignKey(PlotZone)
-    port = models.CharField(max_length=20, blank=True, null=True)
-    type = models.CharField(max_length=50, choices=PLOT_SENSOR_CHOICES)
-    light_status = models.NullBooleanField()
-    current_temp = models.IntegerField(default=0)
-    current_humid = models.IntegerField(default=0)
+# class PlotSensors(models.Model):
+#     plot = models.ForeignKey(PlotZone)
+#     port = models.CharField(max_length=20, blank=True, null=True)
+#     type = models.CharField(max_length=50, choices=PLOT_SENSOR_CHOICES)
+#     light_status = models.NullBooleanField()
+#     current_temp = models.IntegerField(default=0)
+#     current_humid = models.IntegerField(default=0)
 
 
-class ResSensors(models.Model):
+class Sensors(models.Model):
     res = models.ForeignKey(Reservoir)
     port = models.CharField(max_length=20, blank=True, null=True)
-    type = models.CharField(max_length=50, choices=RES_SENSOR_CHOICES)
+    type = models.CharField(max_length=50, choices=SENSOR_CHOICES)
     current_ph = models.FloatField()
     current_ppm = models.FloatField()
+    sensor_pin = models.CharField(default=None, max_length=10)
+
+    def make_config(self):
+        if self.type == 'pH':
+            f = open('ph_config_' + self.res + '.cfg', 'w')
+            f.write(
+                "void setup(){\n\tSerial.begin(9600)\n\t}\n\nvoid loop(){\n\tint sensorValue = analogRead(" +
+                str(self.sensor_pin) + ");\n\tSerial.println(sensorValue);\n\tdelay(1000);\n\t}")
+            f.close()
+        elif self.type == 'temp':
+            f = open('temp_config_' + self.res + '.cfg', 'w')
+            f.write("int val;\nint tempPin = " + self.sensor_pin + ";\n\nvoid setup(){\n\tSerial.begin(9600);\n}\n\nvoid loop()"
+                                                              "\n\tval = analogRead(" + str(self.sensor_pin) + ");\n\tfloat mv ="
+                                                              "(val/1024.0)*5000;\n\tfloat cel = mv/10;\n\tfloat farh - "
+                                                              "(cel*9)/5 + 32;\n\nSerial.print('Temperature =');\nSerial."
+                                                              "print(cel);\n\tSerial.print('*C');\nSerial.println();\n\t"
+                                                              "delay(1000);\n\t}")
+            f.close()
+
+

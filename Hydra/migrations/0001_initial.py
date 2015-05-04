@@ -23,17 +23,6 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='PlotSensors',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('port', models.CharField(max_length=20, null=True, blank=True)),
-                ('type', models.CharField(max_length=50, choices=[(b'3', b'Temp/Humid Sensor'), (b'4', b'Light Sensor')])),
-                ('light_status', models.NullBooleanField()),
-                ('current_temp', models.IntegerField(default=0)),
-                ('current_humid', models.IntegerField(default=0)),
-            ],
-        ),
-        migrations.CreateModel(
             name='PlotZone',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -71,20 +60,16 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='ResSensors',
+            name='Sensors',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('port', models.CharField(max_length=20, null=True, blank=True)),
                 ('type', models.CharField(max_length=50, choices=[(b'1', b'PPM Sensor'), (b'2', b'pH Sensor')])),
                 ('current_ph', models.FloatField()),
                 ('current_ppm', models.FloatField()),
+                ('sensor_pin', models.CharField(default=None, max_length=10)),
                 ('res', models.ForeignKey(to='Hydra.Reservoir')),
             ],
-        ),
-        migrations.AddField(
-            model_name='plotsensors',
-            name='plot',
-            field=models.ForeignKey(to='Hydra.PlotZone'),
         ),
         migrations.AddField(
             model_name='alertemail',

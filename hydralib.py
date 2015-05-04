@@ -16,11 +16,11 @@ SERVER = smtplib.SMTP("smtp.gmail.com", 587)
 
 
 def within_range(goal, current, fail_limit):
-    goal = int(goal*10)
-    current = int(current*10)
-    fail_limit = int(fail_limit*10)
-    lower_range = range((goal-fail_limit), goal+1)
-    upper_range = range(goal, (goal+(fail_limit+1)))
+    goal = int(goal * 10)
+    current = int(current * 10)
+    fail_limit = int(fail_limit * 10)
+    lower_range = range((goal - fail_limit), goal + 1)
+    upper_range = range(goal, (goal + (fail_limit + 1)))
     if (current in lower_range) or (current in upper_range):
         return True
     else:
@@ -56,7 +56,6 @@ def reset_alerts():
 
 
 def send_email(email):
-
     if not email.sent:
         msg = email.msg
         server = SERVER
@@ -77,8 +76,25 @@ def compile_alerts(user, email_plot_list, res_list):
     return render('Hydra/alert_email.html', user, res_list, plt_lst)
 
 
+def make_config(**kwargs):
+    type = kwargs.pop('type', None)
+    sensor_pin = kwargs.pop('pin', '1')
+    if type == 'pH':
+        # add indentifier for res/plot in filename
+        f = open('ph_config.cfg', 'w')
+        f.write(
+            "void setup(){\n\tSerial.begin(9600)\n\t}\n\nvoid loop(){\n\tint sensorValue = analogRead(" +
+            str(sensor_pin) + ");\n\tSerial.println(sensorValue);\n\tdelay(1000);\n\t}")
+        f.close()
+    elif type == 'temp':
+        f = open('temp_config.cfg', 'w')
+        f.write("int val;\nint tempPin = " + sensor_pin + ";\n\nvoid setup(){\n\tSerial.begin(9600);\n}\n\nvoid loop()"
+                                                          "\n\tval = analogRead(" + str(sensor_pin) + ");\n\tfloat mv ="
+                                                          "(val/1024.0)*5000;\n\tfloat cel = mv/10;\n\tfloat farh - "
+                                                          "(cel*9)/5 + 32;\n\nSerial.print('Temperature =');\nSerial."
+                                                          "print(cel);\n\tSerial.print('*C');\nSerial.println();\n\t"
+                                                          "delay(1000);\n\t}")
+
+
 if __name__ == '__main__':
-    plot = PlotZone.objects.get(pk=1)
-    plot.save()
-    current_time = datetime.now().time()
-    print light_check(plot, current_time)
+    make_config(type='pH', pin=2)

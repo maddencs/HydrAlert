@@ -52,6 +52,7 @@ form label {
     background-color: #204d74;
     position: relative;
     text-align: left;
+    display: table;
 }
 
 
@@ -61,15 +62,18 @@ a {
 
 
 .PlotBox {
-    width: auto;
+    /*width: auto;*/
     background: linear-gradient(100deg, darkgreen, forestgreen);
     border-radius: 5px 100px 0 125px;
     margin-bottom: 10px;
     padding-bottom: 5px;
     position: relative;
     display: inline-table;
-    height: 100%;
+    /*height: 100%;*/
     box-shadow: 10px 10px 10px black;
+    min-width: 15em;
+    align-content: right;
+    /*min-height: 45em;*/
 }
 
 .plotMouseOver {
@@ -104,10 +108,11 @@ a {
     margin: 1em;
     padding: 1em;
     box-shadow: 10px 10px 10px black;
+    align-content: center;
 }
 
 #menuBar {
-    /*align-content: center;*/
+    align-content: center;
 }
 
 #menuBar div {
@@ -116,13 +121,14 @@ a {
 }
 
 #menuBar li {
-    display: inline;
-    margin: 2em;
+    /*display: inline;*/
+    /*margin: 2em;*/
+    list-style: none;
     text-align: center;
     background: linear-gradient(180deg, darkred, grey);
     border-radius: 15px;
-    width: auto;
-    height: auto;
+    /*width: auto;*/
+    /*height: auto;*/
 }
 
 #logInDiv {
@@ -142,6 +148,7 @@ a {
 #addResDiv {
     display: none;
     z-index: 10;
+    padding: 1em;
     position: relative;
     /*width: 50%;*/
 }
@@ -153,9 +160,11 @@ a {
 #menuWrap {
     z-index: 10;
     /*text-align: center;*/
-    /*align-content: center;*/
+    align-content: center;
     position: relative;
 }
+
+
 
 #plotDiv {
     z-index: 1;
@@ -165,6 +174,7 @@ a {
 
 #addPlotDiv {
     display: none;
+    padding: 1em;
 }
 
 .form-control {
@@ -173,4 +183,15 @@ a {
 
 .phBad {
     color: red;
+}
+
+#resForm {
+    display: table;
+    padding: 2em;
+    align-content: center;
+    position: relative;
+}
+
+article {
+    align-items: center;
 }
