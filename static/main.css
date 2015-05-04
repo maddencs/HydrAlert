@@ -33,7 +33,7 @@ header {
 }
 
 body{
-    background: linear-gradient(90deg, mediumblue, darkblue, dodgerblue);
+    /*background: linear-gradient(90deg, mediumblue, darkblue, dodgerblue);*/
     font-family: sans-serif;
     align-content: center;
 }
@@ -69,7 +69,7 @@ a {
     position: relative;
     display: inline-table;
     height: 100%;
-    box-shadow: 10px 10px 10px darkblue;
+    box-shadow: 10px 10px 10px black;
 }
 
 .plotMouseOver {
@@ -103,7 +103,7 @@ a {
     overflow: hidden;
     margin: 1em;
     padding: 1em;
-    box-shadow: 10px 10px 10px darkblue;
+    box-shadow: 10px 10px 10px black;
 }
 
 #menuBar {
@@ -169,4 +169,8 @@ a {
 
 .form-control {
     min-width: 0;
+}
+
+.phBad {
+    color: red;
 }

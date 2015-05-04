@@ -130,5 +130,14 @@ def create_email(request, **kwargs):
 @login_required(login_url='/Hydra/login/')
 def delete_plot(request, plot_id):
     p = PlotZone.objects.filter(id=plot_id)
+    res_lst = Reservoir.objects.filter(plot=p)
     p.delete()
+    for res in res_lst:
+        res.delete()
+    return redirect('plot_list')
+
+@login_required(login_url='/Hydra/login/')
+def delete_res(request, res_id):
+    r = Reservoir.objects.get(id=res_id)
+    r.delete()
     return redirect('plot_list')

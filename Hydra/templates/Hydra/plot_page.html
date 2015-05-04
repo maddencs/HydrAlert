@@ -32,6 +32,10 @@
                 var plotDetails = document.createElement("div");
                 var plotDropDown = document.getElementById('plotDropDown');
                 var plotOption = document.createElement("option");
+                var delPlot = document.createElement("a");
+                delPlot.innerHTML = "Delete this plot";
+                delPlot.setAttribute("href", "/Hydra/delete_plot/"+plot.id);
+                delPlot.setAttribute("onclick", "return confirm('Are you sure you want to delete this?');");
                 plotOption.innerHTML = plotPersonalID;
                 plotOption.value = plot.id;
                 plotOption.classList.add('col-md-2');
@@ -61,16 +65,17 @@
                 plotUrl.innerHTML = "Plot ID: " + plotPersonalID;
                 plotElement.appendChild(plotDetails);
                 plotDetails.appendChild(plotUrl);
+                plotDetails.appendChild(delPlot);
                 var anotherBr = document.createElement("br");
                 plotDetails.appendChild(anotherBr);
                 plotDetails.appendChild(plotLILights);
                 plotDetails.appendChild(plotResUL);
                 plotResUL.classList.add('list-unstyled');
                 if(plot.light_status == true){
-                    plotLILights.innerHTML = "Light Status: ";
+                    plotLILights.innerHTML = "<br> Light Status: ";
                     plotLILights.appendChild(greenLight);
                 } else {
-                    plotLILights.innerHTML = "Light Status: ";
+                    plotLILights.innerHTML = "<br> Light Status: ";
                     plotLILights.appendChild(redLight);
                 }
                 plotPersonalID++;
@@ -84,10 +89,22 @@
                         var resLIpH = document.createElement("dt");
                         var resLIPPM = document.createElement("dt");
                         var br = document.createElement("br");
+                        var brCln = br.cloneNode();
                         var resATag = document.createElement("a");
                         var stat_pH = document.createElement("dd");
                         var stat_ppm = document.createElement("dd");
-                        resATag.innerHTML = "Reservoir ID: " + resPersonalID;
+                        var delRes = document.createElement("a");
+                        if (res.current_ph < res.goal_ph_low){
+                            stat_pH.classList.add('phBad');
+                            stat_pH.insertBefore("&uarr;");
+                        } else if (res.current_ph > res.goal_ph_high){
+                            stat_pH.classList.add('phBad');
+
+                        }
+                        delRes.innerHTML = "Delete Reservoir";
+                        delRes.setAttribute("onclick", "return confirm('Are you sure you want to delete this?');");
+                        delRes.setAttribute("href", "/Hydra/del_res/"+res.id);
+                        resATag.innerHTML = "<br>Reservoir ID: " + resPersonalID;
                         resUrl.appendChild(resATag);
 
                         resUrl.setAttribute("href", ("/Hydra/" + res.id + "/resmod/"));
@@ -95,8 +112,8 @@
                         stat_pH.innerHTML = res.current_ph;
                         resLIPPM.innerHTML = "Current PPM: ";
                         stat_ppm.innerHTML = res.current_ppm;
-{#                        resUL.classList.add('list-unstyled');#}
                         plotResUL.appendChild(resUrl);
+                        plotResUL.appendChild(delRes);
                         plotResUL.appendChild(resUL);
                         plotResUL.appendChild(br);
                         resUL.appendChild(resLIpH);
@@ -161,13 +178,15 @@
                 </form>
             </div>
         </ul>
+    </div>
+    <br>
+    <h1>{{ message }}</h1>
             <div id="addResDiv">
                 <form class="row2" action="/Hydra/add_res/" method="POST">
                     {% csrf_token %}
                     <label for="plot">Plot: </label>
-                    <select id="plotDropDown" name="plot" class="form-control">
+                    <select id="plotDropDown" name="plot" class="input-small">
                     </select>
-{#                    <input id="plot" name="plot" type="number" min="0" max="{{ dropdown_plot_list.length }}">#}
                     <label for="goal_ph_low">pH Lower Limit: </label>
                     <input id="goal_ph_low" name="goal_ph_low" type="number" step=".1">
                     <label for="goal_ph_high">pH Upper Limit: </label>
@@ -177,9 +196,6 @@
                     <input type="submit" value="Add Reservoir">
                 </form>
             </div>
-    </div>
-    <br>
-    <h1>{{ message }}</h1>
     <div id="plotDiv"></div>
     <script>
 {#        forms#}

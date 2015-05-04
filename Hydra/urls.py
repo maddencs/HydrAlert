@@ -17,4 +17,6 @@ urlpatterns = patterns('',
                        url(r'^add_res/$', views.add_res_page, name='add_res'),
                        url(r'^data_grab/$', views.data_grab, name='data_grab'),
                        url(r'^alert_email/$', views.create_email, name='alert_email'),
+                       url(r'^delete_plot/(?P<plot_id>[0-9]+)/$', views.delete_plot, name='delete_plot'),
+                       url(r'^del_res/(?P<res_id>[0-9]+)/$', views.delete_res, name='delete_res'),
                        )

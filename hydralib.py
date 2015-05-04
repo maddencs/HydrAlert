@@ -7,6 +7,7 @@ import django
 django.setup()
 
 from django.http import HttpResponse
+from django.shortcuts import render
 from Hydra.models import PlotZone
 from datetime import datetime
 import smtplib
@@ -61,12 +62,19 @@ def send_email(email):
         server = SERVER
         try:
             server.starttls()
-        except smtplib.SMTPException:
-            server.login('hydroponicsalert', 'HydroPass')
             server.sendmail(email.fromaddr, email.toaddrs, msg)
             email.sent = True
+        except smtplib.SMTPException:
+            server.login('hydroponicsalert', 'HydroPass')
     else:
         pass
+
+
+def compile_alerts(user, email_plot_list, res_list):
+    user = user
+    plt_lst = email_plot_list
+    res_list = res_list
+    return render('Hydra/alert_email.html', user, res_list, plt_lst)
 
 
 if __name__ == '__main__':

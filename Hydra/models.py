@@ -18,9 +18,9 @@ class PlotZone(models.Model):
     light_status = models.BooleanField(default=True)
     goal_temp = models.IntegerField(default=0)
     goal_humid = models.IntegerField(default=0)
-    humid_alert_sent = models.NullBooleanField(default=False)
-    temp_alert_sent = models.NullBooleanField(default=False)
-    light_alert_sent = models.NullBooleanField(default=False)
+    humid_alert = models.NullBooleanField(default=False)
+    temp_alert = models.NullBooleanField(default=False)
+    light_alert = models.NullBooleanField(default=False)
     alert_status = models.NullBooleanField(default=False)
 
     def __str__(self):
@@ -35,8 +35,8 @@ class Reservoir(models.Model):
     res_change_date = models.DateField(default=None, null=True, blank=True)
     goal_ph_low = models.FloatField(default=5.5)
     goal_ph_high = models.FloatField(default=6.5)
-    ph_alert_sent = models.NullBooleanField(default=False)
-    ppm_alert_sent = models.NullBooleanField(default=False)
+    ph_alert = models.NullBooleanField(default=False)
+    ppm_alert = models.NullBooleanField(default=False)
     res_change_alert = models.NullBooleanField(default=False)
     alert_status = models.NullBooleanField(default=False)
 
@@ -45,6 +45,7 @@ class Reservoir(models.Model):
 
 
 class AlertEmail(models.Model):
+    user = models.ForeignKey(User)
     time_failed = models.DateTimeField()
     res = models.ForeignKey(Reservoir)
     plot_zone = models.ForeignKey(PlotZone)
@@ -52,6 +53,8 @@ class AlertEmail(models.Model):
     toaddrs = models.EmailField(default=None)
     msg = models.CharField(max_length=3000)
     sent = models.BooleanField(default=False)
+    plt_alerts = []
+    res_alerts = []
 
 
 class PlotSensors(models.Model):
