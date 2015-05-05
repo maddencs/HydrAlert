@@ -74,27 +74,3 @@ def compile_alerts(user, email_plot_list, res_list):
     plt_lst = email_plot_list
     res_list = res_list
     return render('Hydra/alert_email.html', user, res_list, plt_lst)
-
-
-def make_config(**kwargs):
-    type = kwargs.pop('type', None)
-    sensor_pin = kwargs.pop('pin', '1')
-    if type == 'pH':
-        # add indentifier for res/plot in filename
-        f = open('ph_config.cfg', 'w')
-        f.write(
-            "void setup(){\n\tSerial.begin(9600)\n\t}\n\nvoid loop(){\n\tint sensorValue = analogRead(" +
-            str(sensor_pin) + ");\n\tSerial.println(sensorValue);\n\tdelay(1000);\n\t}")
-        f.close()
-    elif type == 'temp':
-        f = open('temp_config.cfg', 'w')
-        f.write("int val;\nint tempPin = " + sensor_pin + ";\n\nvoid setup(){\n\tSerial.begin(9600);\n}\n\nvoid loop()"
-                                                          "\n\tval = analogRead(" + str(sensor_pin) + ");\n\tfloat mv ="
-                                                          "(val/1024.0)*5000;\n\tfloat cel = mv/10;\n\tfloat farh - "
-                                                          "(cel*9)/5 + 32;\n\nSerial.print('Temperature =');\nSerial."
-                                                          "print(cel);\n\tSerial.print('*C');\nSerial.println();\n\t"
-                                                          "delay(1000);\n\t}")
-
-
-if __name__ == '__main__':
-    make_config(type='pH', pin=2)

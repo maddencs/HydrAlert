@@ -64,7 +64,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('port', models.CharField(max_length=20, null=True, blank=True)),
-                ('type', models.CharField(max_length=50, choices=[(b'1', b'PPM Sensor'), (b'2', b'pH Sensor')])),
+                ('type', models.CharField(max_length=50, choices=[(b'ppm', b'PPM Sensor'), (b'pH', b'pH Sensor'), (b'temp', b'Temp/Humid Sensor'), (b'light', b'Light Sensor')])),
                 ('current_ph', models.FloatField()),
                 ('current_ppm', models.FloatField()),
                 ('sensor_pin', models.CharField(default=None, max_length=10)),

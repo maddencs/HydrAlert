@@ -10,7 +10,6 @@ from django.contrib.auth.models import User
 from Hydra.models import AlertEmail, PlotZone, Reservoir
 from datetime import datetime
 from hydralib import within_range, light_check, compile_alerts
-from django.utils import timezone
 
 
 def check_stats():

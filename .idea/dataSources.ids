@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component name="dataSourceStorage">
-  <data-source name="db" uuid="ed1bd292-6fa7-49a4-9df7-213f66e71dd9">
+  <data-source name="db" uuid="56de2384-45ad-4f58-87af-0c200b562dba">
     <database-info product="SQLite" version="3.7.6.3" jdbc-version="2.1" driver-name="SQLiteJDBC" driver-version="native"/>
     <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed"/>
     <schema name="" catalog=""/>

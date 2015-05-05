@@ -61,26 +61,8 @@ def modify_plot(request, plot_id):
 class PlotForm(forms.ModelForm):
     class Meta:
         model = PlotZone
-        # fields = ('light_start', 'light_stop', 'goal_temp')
         exclude = ('current_temp', 'lights_on', 'current_humid', 'user', 'humid_alert_sent', 'temp_alert_sent',
                    'light_alert_sent', )
-        TimeOptions = {
-            'format': 'HH:ii',
-            'autoclose': True,
-            'showMeridian': True,
-            'clearBtn': True,
-        }
-        widgets = {
-            'light_start': TimeWidget(usel10n=True, bootstrap_version=3),
-            'light_stop': TimeWidget(usel10n=True, bootstrap_version=3),
-        }
-
-
-class AddPlotForm(forms.ModelForm):
-    class Meta:
-        model = PlotZone
-        exclude = ('current_temp', 'lights_on', 'current_humid', 'name', 'humid_alert_sent', 'temp_alert_sent',
-                   'light_alert_sent', 'user', )
         TimeOptions = {
             'format': 'HH:ii',
             'autoclose': True,

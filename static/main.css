@@ -192,6 +192,19 @@ a {
     position: relative;
 }
 
+form {
+    margin: 1.8em;
+}
+
+input {
+    width: 4em;
+}
+
 article {
     align-items: center;
+}
+
+#modResArt {
+    display:none;
+    width: 5em;
 }

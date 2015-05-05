@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
-from .models import Reservoir, PlotZone
+from .models import Reservoir, PlotZone, Sensors
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -96,29 +96,36 @@ def add_plot_page(request):
         p.goal_temp = request.POST['goal_temp']
         p.goal_humid = request.POST['goal_humid']
         p.save()
-        print request.POST
-    return redirect('plot_list')
+        return HttpResponse()
 
 
 @login_required(login_url='/Hydra/login/')
-def add_res_page(request):
+def add_res_page(request, res_id):
     message = {'message': ""}
     if request.method == 'POST':
-        res_plot_list = PlotZone.objects.filter(user=request.user)
-        plot_id_list = []
-        for plot in res_plot_list:
-            plot_id_list.append(plot.id)
-        if int(request.POST['plot']) in plot_id_list:
-            plot = PlotZone(pk=request.POST['plot'])
-            r = Reservoir(plot=plot)
-            r.goal_ph_high = request.POST['goal_ph_high']
-            r.goal_ph_low = request.POST['goal_ph_low']
-            r.goal_ppm = request.POST['goal_ppm']
-            r.save()
-        else:
-            message['message'] = "You can't add reservoirs to plots that aren't yours."
-            return render(request, 'Hydra/plot_page.html', message)
-    return redirect('plot_list')
+        r = Reservoir.objects.get(pk=res_id)
+        r.goal_ph_high = request.POST['goalHighpH']
+        r.goal_ph_low = request.POST['goalLowpH']
+        r.goal_ppm = request.POST['goalPPM']
+        r.ppm_tolerance = request.POST['ppmTolerance']
+
+
+
+        # res_plot_list = PlotZone.objects.filter(user=request.user)
+        # plot_id_list = []
+        # for plot in res_plot_list:
+        #     plot_id_list.append(plot.id)
+        # if int(request.POST['plot']) in plot_id_list:
+        #     plot = PlotZone(pk=request.POST['plot'])
+        #     r = Reservoir(plot=plot)
+        #     r.goal_ph_high = request.POST['goal_ph_high']
+        #     r.goal_ph_low = request.POST['goal_ph_low']
+        #     r.goal_ppm = request.POST['goal_ppm']
+        #     r.save()
+        #     return HttpResponse()
+        # else:
+        #     message['message'] = "You can't add reservoirs to plots that aren't yours."
+        #     return render(request, 'Hydra/plot_page.html', message)
 
 
 def create_email(request, **kwargs):
@@ -141,3 +148,18 @@ def delete_res(request, res_id):
     r = Reservoir.objects.get(id=res_id)
     r.delete()
     return redirect('plot_list')
+
+@login_required(login_url='/Hydra/login/')
+def add_sensor(request, res_id):
+    if request.method == 'POST':
+        pin = request.POST['pin']
+        s_type = request.POST.get('type')
+        res = Reservoir.objects.get(pk=res_id)
+        sensor = Sensors(type=s_type, res=res, sensor_pin=pin)
+        sensor.save()
+        return redirect('plot_list')
+    return render(request, 'Hydra/add_sensor.html', {'res_id': res_id})
+
+# @login_required(login_url='/Hydra/login/')
+# def sensor_page(request, res_id):
+#     res = Reservoirs.objects.get(pk=res_id)
