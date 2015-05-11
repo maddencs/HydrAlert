@@ -64,12 +64,11 @@
     </table>
     <table name="Hydra_sensors" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
-      <column name="port" sqlType="VARCHAR(20)" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
       <column name="type" sqlType="VARCHAR(50)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
       <column name="current_ph" sqlType="REAL" precision="2000000000" scale="10" nullable="false" jdbcType="6"/>
-      <column name="current_ppm" sqlType="REAL" precision="2000000000" scale="10" nullable="false" jdbcType="6"/>
       <column name="sensor_pin" sqlType="VARCHAR(10)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
       <column name="res_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="current_ppm" sqlType="REAL" precision="2000000000" scale="10" nullable="false" jdbcType="6"/>
       <primary-key columns="id"/>
       <foreign-key name="#FAKE_Hydra_sensors_1" columns="res_id" ref-table="Hydra_reservoir" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
       <index name="Hydra_sensors_1a1cc17b" unique="true" columns="res_id"/>

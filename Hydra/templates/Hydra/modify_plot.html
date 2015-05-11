@@ -8,13 +8,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <link href="{{ STATIC_URL }}css/bootstrap.css" rel="stylesheet" type="text/css"/>
     <script src="{{ STATIC_URL }}js/bootstrap.js"></script>
-    {{ form.media }}
     <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}"/>
+    <link href='http://fonts.googleapis.com/css?family=Bilbo+Swash+Caps' rel='stylesheet' type='text/css'>
 </head>
 <body>
-    <header><h1>HydroAlert</h1>
-    <h3>Plot {{ plot_id }}</h3></header>
-    <div class="current_stats">
+    <header></header>
+    <div style="padding-top: 5em" class="current_stats">
         <ul>
             <li>Light Status: {{ plot.lights_on }}</li>
             <li>Current Temp: {{ plot.current_temp }}</li>

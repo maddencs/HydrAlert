@@ -7,7 +7,7 @@ SENSOR_CHOICES = [('ppm', 'PPM Sensor'), ('pH', 'pH Sensor'), ('temp', 'Temp/Hum
 
 
 class PlotZone(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ManyToManyField(User)
     name = models.CharField(max_length=40, blank=True)
     plot_comments = models.CharField(max_length=500, blank=True)
     current_temp = models.IntegerField(default=0)
@@ -62,8 +62,13 @@ class Sensors(models.Model):
     res = models.ForeignKey(Reservoir)
     type = models.CharField(max_length=50, choices=SENSOR_CHOICES)
     current_ph = models.FloatField(default=0)
-    current_ppm = models.FloatField(default=0)
     sensor_pin = models.CharField(default=None, max_length=10)
+
+    # def save(self, *args, **kwargs):
+    #     if not self.pk:
+    #         return
+    #     else:
+    #         super(Reservoir, self).save(*args, **kwargs)
 
     def make_config(self):
         if self.type == 'pH':

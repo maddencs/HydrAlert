@@ -1,5 +1,7 @@
-.add_res {
-    font-size: 10px;
+html, body {
+    margin: 0;
+    position: relative;
+    padding: 0;
 }
 
 .ReservoirList {
@@ -15,7 +17,6 @@ ul .ReservoirDetails {
     background-color: slategrey;
     border-style: outset;
     border-color: #3c763d;
-    /*text-align:right;*/
     display: inline-block;
     margin: 1em;
     box-shadow: 3px;
@@ -25,15 +26,22 @@ section {
     display: block;
 }
 
-header {
+header::before {
+    content: 'HydrA';
     text-align:center;
     font-weight:bold;
-    font-style:italic;
-    background-color: forestgreen;
+    font-style:oblique;
+    position: fixed;
+    width: 100%;
+    z-index: 2;
+    box-shadow: 0 0 36px 0 black;
+    background: linear-gradient(to bottom, rgba(98,125,77,1) 0%, rgba(31,59,8,1) 100%);
+    font-family: 'Bilbo Swash Caps', cursive;
+    font-size: 3em;
+    color: floralwhite;
 }
 
 body{
-    /*background: linear-gradient(90deg, mediumblue, darkblue, dodgerblue);*/
     font-family: sans-serif;
     align-content: center;
 }
@@ -42,6 +50,8 @@ div .current_stats {
     color: blue;
     font-weight: bold;
     text-align: left;
+    float: right;
+    position: relative;
 }
 
 .mod_stats {
@@ -49,31 +59,30 @@ div .current_stats {
 }
 
 form label {
-    background-color: #204d74;
     position: relative;
     text-align: left;
     display: table;
 }
 
 
-a {
+a:link {
+    text-decoration: none;
+    color: black;
+}
+a:visited{
+    color: black;
     text-decoration: none;
 }
 
 
 .PlotBox {
-    /*width: auto;*/
     background: linear-gradient(100deg, darkgreen, forestgreen);
     border-radius: 5px 100px 0 125px;
     margin-bottom: 10px;
     padding-bottom: 5px;
     position: relative;
     display: inline-table;
-    /*height: 100%;*/
-    box-shadow: 10px 10px 10px black;
     min-width: 15em;
-    align-content: right;
-    /*min-height: 45em;*/
 }
 
 .plotMouseOver {
@@ -82,10 +91,11 @@ a {
 
 .Reservoir_ID {
     text-align: left;
+    color: black;
 }
 
 .plotAlert {
-    border-radius: 5px 100px 0px 125px;
+    border-radius: 5px 100px 0 125px;
     margin-bottom: 10px;
     padding-bottom: 5px;
     position: relative;
@@ -106,37 +116,41 @@ a {
     max-width: 90%;
     overflow: hidden;
     margin: 1em;
-    padding: 1em;
-    box-shadow: 10px 10px 10px black;
+    padding: 3em;
+    box-shadow: 10px 10px 20px 10px rgba(0,0,0,.5);
     align-content: center;
+}
+
+ul dt a {
+    text-decoration: none;
+    color: black;
 }
 
 #menuBar {
     align-content: center;
-}
-
-#menuBar div {
-    /*text-align: center;*/
-    /*display: none;*/
+    float: left;
+    position: fixed;
+    margin-top: 6em;
 }
 
 #menuBar li {
-    /*display: inline;*/
-    /*margin: 2em;*/
+    float: left;
+    box-shadow: 10px 10px 10px 5px rgba(0,0,0,.3);
     list-style: none;
     text-align: center;
-    background: linear-gradient(180deg, darkred, grey);
-    border-radius: 15px;
-    /*width: auto;*/
-    /*height: auto;*/
+    background: linear-gradient(100deg, darkgreen, forestgreen);
+    border-radius: 5px 100px 0 125px;
+    margin: 10px;
+    position: relative;
+    padding:1em;
+    font-weight: bold;
+    cursor: default;
+    user-select: none;
 }
 
-#logInDiv {
-    display: none;
-    width: auto;
-    height: auto;
+#menuBar li:nth-child(n) {
+    clear: both;
 }
-
 
 .resAlert {
     background-color: yellow;
@@ -145,12 +159,19 @@ a {
     padding: 3px;
 }
 
+#logInDiv {
+    display: none;
+    width: auto;
+    height: auto;
+}
+
 #addResDiv {
     display: none;
-    z-index: 10;
+    /*z-index: 10;*/
     padding: 1em;
-    position: relative;
-    /*width: 50%;*/
+    /*position: relative;*/
+    width: auto;
+    /*float: left;*/
 }
 
 .plotResUL {
@@ -159,7 +180,6 @@ a {
 
 #menuWrap {
     z-index: 10;
-    /*text-align: center;*/
     align-content: center;
     position: relative;
 }
@@ -168,7 +188,8 @@ a {
 
 #plotDiv {
     z-index: 1;
-    position: relative;
+    float: right;
+    margin-top: 6em;
 }
 
 
@@ -177,34 +198,46 @@ a {
     padding: 1em;
 }
 
-.form-control {
-    min-width: 0;
-}
-
 .phBad {
     color: red;
 }
 
-#resForm {
-    display: table;
-    padding: 2em;
-    align-content: center;
-    position: relative;
-}
-
-form {
-    margin: 1.8em;
-}
-
 input {
-    width: 4em;
+    width: auto;
 }
 
 article {
     align-items: center;
+    width: 10em;
 }
 
 #modResArt {
     display:none;
     width: 5em;
+    position: relative;
+}
+
+a{
+    cursor: default;
+}
+
+ul article {
+    float: left;
+    display: none;
+    box-shadow: 10px 10px 10px 5px rgba(0,0,0,.3);
+    list-style: none;
+    text-align: center;
+    background: linear-gradient(100deg, darkgreen, forestgreen);
+    border-radius: 5px 100px 0 125px;
+    position: relative;
+    font-weight: bold;
+    width: auto;
+    cursor: default;
+}
+
+article form{
+    padding: 2em;
+    align-content: center;
+    position: relative;
+    width: 100%;
 }

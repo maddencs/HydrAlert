@@ -13,18 +13,21 @@
             $('#resForm').ajaxForm(function () {
                 alert("Reservoir added!");
             });
-            $('plotForm').ajaxForm(function () {
+            $('#plotForm').ajaxForm(function () {
                 alert("Plot added!");
             });
-            $('modResForm').ajaxForm(function () {
+            $('#modResForm').ajaxForm(function () {
                 alert("Reservoir modified!");
+            });
+            $('#changeInfo').ajaxForm(function () {
+                alert("Info updated!");
             })
         });
     </script>
+    <link href='http://fonts.googleapis.com/css?family=Bilbo+Swash+Caps' rel='stylesheet' type='text/css'>
 </head>
 <body>
-
-<header>HydrA</header>
+<header></header>
 <div class="col-sm-2" id="menuWrap">
     <ul id="menuBar">
         <li id="plotPage">Plot List</li>
@@ -32,18 +35,18 @@
         <li id="addReservoir" onclick="pause()">Add Reservoir</li>
         <li id="logOut"><a href="/Hydra/logout/">Logout</a></li>
         <li id="logIn">Log In</li>
-        <li id="changeInfo">Change Personal Info</li>
-        <div id="logInDiv">
+        <li id="infoButton">Change Personal Info</li>
+        <article id="logInDiv">
             <form action="/Hydra/login/" method="POST">
                 {% csrf_token %}
                 <label for="username">Username: </label>
                 <input name="username" id="username" type="text">
                 <label for="password">Password: </label>
                 <input name="password" id="password" type="password">
-                <input type="submit" value="Login">
+                <input type="submit" onclick="resume()" value="Login">
             </form>
-        </div>
-        <article class="PlotBox col-sm-3" id="addResDiv">
+        </article>
+        <article id="addResDiv">
             <form id="resForm" action="/Hydra/add_res/" method="POST">
                 {% csrf_token %}
                 <label for="plot">Plot: </label>
@@ -55,11 +58,12 @@
                 <input id="goal_ph_high" name="goal_ph_high" type="number" step=".1">
                 <label for="goal_ppm">Goal PPM: </label>
                 <input id="goal_ppm" name="goal_ppm" type="number">
-                <input type="submit" onclick="javascript:resume()" value="Add Reservoir">
+                <br>
+                <input type="submit" onclick="resume()" value="Add">
             </form>
         </article>
-        <article class="PlotBox col-sm-3" id="addPlotDiv">
-            <form action="/Hydra/add_plot/" method="POST">
+        <article class="col-md-3" id="addPlotDiv">
+            <form id="plotForm" action="/Hydra/add_plot/" method="POST">
                 {% csrf_token %}
                 <label for="light_start">Lights Start Time: </label>
                 <input id="light_start" name="light_start" type="time">
@@ -69,10 +73,11 @@
                 <input id="goal_temp" name="goal_temp" type="number" min="0" max="120">
                 <label for="goal_humid">Goal Humidity: </label>
                 <input id="goal_humid" name="goal_humid" type="number" min="0" max="100">
-                <input type="submit" value="Create Plot">
+                <input type="submit" onclick="resume()" value="Create Plot">
             </form>
         </article>
-        <article class="PlotBox col-sm-3" id="modResArt">
+        <article class="col-md-3" id="modResArt">
+
             <form class="input-small" action="/Hydra/{{ res_id }}/resmod/" method="POST" id="modResForm">
                 {% csrf_token %}
                 <label for="goalLowpH">Lower pH Limit:</label>
@@ -83,6 +88,16 @@
                 <input type="number" name="goalPPM" id="goalPPM">
                 <label for="ppmTolerance">PPM Tolerance:</label>
                 <input id="ppmTolerance" name="ppmTolerance" type="number">
+                <input type="submit" onclick="resume()" value="Save">
+            </form>
+        </article>
+        <article class="table" id="changeInfo">
+            <form method="POST" id="changeInfo" class="input-small" action="/Hydra/change_info/">
+                {% csrf_token %}
+                <label for="email">Email Address</label>
+                <input name="email" id="email" placeholder="{{ request.user.email }}" type="email">
+                <label for="name">Name</label>
+                <input name="name" id="name" placeholder="{{ request.user.name }}" type="text">
                 <input type="submit" value="Save">
             </form>
         </article>
@@ -135,20 +150,8 @@
             plotElement.classList.add('col-md-4');
             if (plot.alert_status == true) {
                 plotElement.classList.add('plotAlert');
-                plotElement.addEventListener("mouseover", function () {
-                    this.classList.add('plotAlertMouseover');
-                });
-                plotElement.addEventListener("mouseout", function () {
-                    this.classList.remove('plotAlertMouseover');
-                });
             } else {
                 plotElement.classList.add('PlotBox');
-                plotElement.addEventListener("mouseover", function () {
-                    this.classList.add('plotMouseOver');
-                });
-                plotElement.addEventListener("mouseout", function () {
-                    this.classList.remove('plotMouseOver');
-                });
             }
             plotUrl.setAttribute("href", ("/Hydra/" + plot.id + "/plotmod/"));
             plotUrl.innerHTML = "Plot ID: " + plotPersonalID;
@@ -183,7 +186,7 @@
                     var stat_pH = document.createElement("dd");
                     var stat_ppm = document.createElement("dd");
                     var delRes = document.createElement("a");
-                    delRes.innerHTML = "Delete Reservoir";
+                    delRes.innerHTML = "Delete<br>Reservoir";
                     delRes.setAttribute("onclick", "return confirm('Are you sure you want to delete this?');");
                     delRes.setAttribute("href", "/Hydra/del_res/" + res.id);
                     resATag.innerHTML = "<br>Reservoir ID: " + resPersonalID;
@@ -266,6 +269,9 @@
     });
     $("li[id='addPlot']").click(function () {
         $("#addPlotDiv").toggle('slow');
+    });
+    $("li[id='infoButton']").click(function () {
+        $("#changeInfo").toggle('slow');
     });
 </script>
 </body>

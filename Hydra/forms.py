@@ -1,6 +1,5 @@
 from django import forms
 from django.shortcuts import render, get_object_or_404, redirect
-from datetimewidget.widgets import TimeWidget, DateWidget
 from Hydra.models import Reservoir, PlotZone
 
 
@@ -19,7 +18,7 @@ def modify_res(request, reservoir_id):
             form.save()
             return redirect('plot_list')
         else:
-            print form.errors
+            print(form.errors)
     else:
         form = ReservoirForm(instance=r, initial=prepop_data)
 
@@ -49,7 +48,7 @@ def modify_plot(request, plot_id):
             return redirect('plot_list')
 
         else:
-            print form.errors
+            print(form.errors)
     else:
         form = PlotForm(instance=p, initial=prepop_data)
 
@@ -63,30 +62,9 @@ class PlotForm(forms.ModelForm):
         model = PlotZone
         exclude = ('current_temp', 'lights_on', 'current_humid', 'user', 'humid_alert_sent', 'temp_alert_sent',
                    'light_alert_sent', )
-        TimeOptions = {
-            'format': 'HH:ii',
-            'autoclose': True,
-            'showMeridian': True,
-            'clearBtn': True,
-        }
-        widgets = {
-            'light_start': TimeWidget(usel10n=True, bootstrap_version=3),
-            'light_stop': TimeWidget(usel10n=True, bootstrap_version=3),
-        }
 
 
 class ReservoirForm(forms.ModelForm):
     class Meta:
         model = Reservoir
         exclude = ('plot', 'current_ph', 'current_ppm', 'ph_alert_sent', 'ppm_alert_sent', 'res_change_alert',)
-
-        DateOptions = {
-            'format': 'yyyy/mm/dd',
-            'autoclose': True,
-            'clearBtn': True,
-            'todayHighlight': True,
-        }
-
-        widgets = {
-            'date': DateWidget(usel10n=True, bootstrap_version=3),
-        }
