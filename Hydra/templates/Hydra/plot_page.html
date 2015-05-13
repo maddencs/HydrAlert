@@ -12,6 +12,7 @@
         $(document).ready(function () {
             $('#resForm').ajaxForm(function () {
                 alert("Reservoir added!");
+                resume();
             });
             $('#plotForm').ajaxForm(function () {
                 alert("Plot added!");
@@ -31,81 +32,96 @@
 <div class="col-sm-2" id="menuWrap">
     <ul id="menuBar">
         <li id="plotPage">Plot List</li>
-        <li id="addPlot">Add Plot</li>
-        <li id="addReservoir" onclick="pause()">Add Reservoir</li>
-        <li id="logOut"><a href="/Hydra/logout/">Logout</a></li>
-        <li id="logIn">Log In</li>
-        <li id="infoButton">Change Personal Info</li>
-        <article id="logInDiv">
-            <form action="/Hydra/login/" method="POST">
-                {% csrf_token %}
-                <label for="username">Username: </label>
-                <input name="username" id="username" type="text">
-                <label for="password">Password: </label>
-                <input name="password" id="password" type="password">
-                <input type="submit" onclick="resume()" value="Login">
-            </form>
-        </article>
-        <article id="addResDiv">
-            <form id="resForm" action="/Hydra/add_res/" method="POST">
-                {% csrf_token %}
-                <label for="plot">Plot: </label>
-                <select id="plotDropDown" name="plot" class="input-small">
-                </select>
-                <label for="goal_ph_low">pH Lower Limit: </label>
-                <input id="goal_ph_low" name="goal_ph_low" type="number" step=".1">
-                <label for="goal_ph_high">pH Upper Limit: </label>
-                <input id="goal_ph_high" name="goal_ph_high" type="number" step=".1">
-                <label for="goal_ppm">Goal PPM: </label>
-                <input id="goal_ppm" name="goal_ppm" type="number">
+        <li id="addPlot"><span>Add Plot</span>
                 <br>
-                <input type="submit" onclick="resume()" value="Add">
-            </form>
-        </article>
-        <article class="col-md-3" id="addPlotDiv">
-            <form id="plotForm" action="/Hydra/add_plot/" method="POST">
-                {% csrf_token %}
-                <label for="light_start">Lights Start Time: </label>
-                <input id="light_start" name="light_start" type="time">
-                <label for="light_stop">Lights Stop Time: </label>
-                <input id="light_stop" name="light_stop" type="time">
-                <label for="goal_temp">Goal Temperature: </label>
-                <input id="goal_temp" name="goal_temp" type="number" min="0" max="120">
-                <label for="goal_humid">Goal Humidity: </label>
-                <input id="goal_humid" name="goal_humid" type="number" min="0" max="100">
-                <input type="submit" onclick="resume()" value="Create Plot">
-            </form>
-        </article>
-        <article class="col-md-3" id="modResArt">
+            <article class="col-md-3" id="addPlotDiv">
+                <a id="closeButton" onclick="closeForm()">X</a>
+                <form id="plotForm" action="/Hydra/add_plot/" method="POST">
+                    {% csrf_token %}
+                    <label for="light_start">Lights Start Time: </label>
+                    <input id="light_start" name="light_start" type="time">
+                    <label for="light_stop">Lights Stop Time: </label>
+                    <input id="light_stop" name="light_stop" type="time">
+                    <label for="goal_temp">Goal Temperature: </label>
+                    <input id="goal_temp" name="goal_temp" type="number" min="0" max="120">
+                    <label for="goal_humid">Goal Humidity: </label>
+                    <input id="goal_humid" name="goal_humid" type="number" min="0" max="100">
+                    <input type="submit" onclick="closeForm()" value="Create Plot">
+                </form>
+            </article>
+        </li>
+        <li id="addReservoir" onclick="pause()"><span>Add Reservoir</span>
+                <br>
+            <article id="addResDiv">
+                <a id="closeButton" onclick="closeForm()">X</a>
+                <form id="resForm" action="/Hydra/add_reservoir/" method="POST">
+                    {% csrf_token %}
+                    <label for="plot">Plot: </label>
+                    <select id="plotDropDown" name="plot" class="input-small">
+                    </select>
+                    <label for="goal_ph_low">pH Lower Limit: </label>
+                    <input id="goal_ph_low" name="goal_ph_low" type="number" step=".1">
+                    <label for="goal_ph_high">pH Upper Limit: </label>
+                    <input id="goal_ph_high" name="goal_ph_high" type="number" step=".1">
+                    <label for="goal_ppm">Goal PPM: </label>
+                    <input id="goal_ppm" name="goal_ppm" type="number">
+                    <br>
+                    <input type="submit" onclick="closeForm()" value="Add">
+                </form>
+            </article>
+        </li>
+        <li id="logOut"><a href="/Hydra/logout/">Logout</a></li>
+        <li id="logIn"><span>Log In</span>
+                <br>
+            <article id="logInDiv">
+                <a id="closeButton" onclick="closeForm()">X</a>
+                <form action="/Hydra/login/" class="input-small" method="POST">
+                    {% csrf_token %}
+                    <label for="username">Username: </label>
+                    <input name="username" id="username" type="text">
+                    <label for="password">Password: </label>
+                    <input name="password" id="password" type="password">
+                    <input type="submit" onclick="closeForm()" value="Login">
+                </form>
+            </article>
+        </li>
+        <li id="infoButton"><span>Change Personal Info</span>
+                <br>
+            <article id="changeInfo">
+                <a id="closeButton" onclick="closeForm()">X</a>
+                <form method="POST" id="changeInfo" class="input-small" action="/Hydra/change_info/">
+                    {% csrf_token %}
+                    <label for="email">Email Address</label>
+                    <input name="email" id="email" placeholder="{{ request.user.email }}" type="email">
+                    <label for="name">Name</label>
+                    <input name="name" id="name" placeholder="{{ request.user.name }}" type="text">
+                    <input type="submit" value="Save">
+                </form>
+            </article>
+        </li>
 
-            <form class="input-small" action="/Hydra/{{ res_id }}/resmod/" method="POST" id="modResForm">
+
+        <article class="leafShape input-small col-md-3" id="modResArt">
+            <span id="closeButton" onclick="closeForm()">X</span>
+            <span id="resIDSpan"></span>
+            <form class="input-small" action="/Hydra/modify_reservoir/{{ res_id }}/" method="POST" id="modResForm">
                 {% csrf_token %}
-                <label for="goalLowpH">Lower pH Limit:</label>
-                <input type="number" step=".1" id="goalLowpH">
-                <label for="goalHighpH">Upper pH Limit:</label>
-                <input type="number" step=".1" id="goalHighpH">
-                <label for="goalPPM">Goal PPM:</label>
-                <input type="number" name="goalPPM" id="goalPPM">
-                <label for="ppmTolerance">PPM Tolerance:</label>
-                <input id="ppmTolerance" name="ppmTolerance" type="number">
-                <input type="submit" onclick="resume()" value="Save">
+                <label for="goal_ph_low">Lower pH Limit:</label>
+                <input type="number" name="goal_ph_low" step=".1" id="goal_ph_low">
+                <label for="goal_ph_high">Upper pH Limit:</label>
+                <input type="number" step=".1" name ="goal_ph_high" id="goal_ph_high">
+                <label for="goal_ppm">Goal PPM:</label>
+                <input type="number" name="goal_ppm" id="goal_ppm">
+                <label for="ppm_tolerance">PPM Tolerance:</label>
+                <input id="ppm_tolerance" name="ppm_tolerance" type="number">
+                <input type="submit" onclick="closeForm()" value="Save">
             </form>
         </article>
-        <article class="table" id="changeInfo">
-            <form method="POST" id="changeInfo" class="input-small" action="/Hydra/change_info/">
-                {% csrf_token %}
-                <label for="email">Email Address</label>
-                <input name="email" id="email" placeholder="{{ request.user.email }}" type="email">
-                <label for="name">Name</label>
-                <input name="name" id="name" placeholder="{{ request.user.name }}" type="text">
-                <input type="submit" value="Save">
-            </form>
-        </article>
+
 
     </ul>
 </div>
 <br>
-{#    <h1>{{ message }}</h1>#}
 
 
 <div class="col-sm-9" id="plotDiv"></div>
@@ -115,7 +131,6 @@
     var request = new XMLHttpRequest();
     var greenSrc = '{% static 'icons_lights_green.png' %}';
     var redSrc = '{% static 'icons_lights_red.png' %}';
-    {#        document.getElementById('plotDropDown').innerHTML = "";#}
     var draw = function (data) {
         var plotPersonalID = 1;
         var plotDropDown = document.getElementById('plotDropDown');
@@ -139,7 +154,8 @@
             plotResUL.classList.add('col-md-5');
             delPlot.innerHTML = "Delete this plot";
             delPlot.setAttribute("href", "/Hydra/delete_plot/" + plot.id);
-            delPlot.setAttribute("onclick", "return confirm('Are you sure you want to delete this?');");
+            delPlot.setAttribute("onclick", "return confirm('Are you sure you want to delete this? All children" +
+            " reservoirs will be deleted, as well...');");
             plotOption.innerHTML = plotPersonalID;
             plotOption.value = plot.id;
             plotOption.classList.add('col-md-2');
@@ -151,9 +167,9 @@
             if (plot.alert_status == true) {
                 plotElement.classList.add('plotAlert');
             } else {
-                plotElement.classList.add('PlotBox');
+                plotElement.classList.add('leafShape');
             }
-            plotUrl.setAttribute("href", ("/Hydra/" + plot.id + "/plotmod/"));
+            plotUrl.setAttribute("href", ("/Hydra/modify_plot/" + plot.id + "/"));
             plotUrl.innerHTML = "Plot ID: " + plotPersonalID;
             plotElement.appendChild(plotDetails);
             plotDetails.appendChild(plotUrl);
@@ -181,7 +197,6 @@
                     var resUrl = document.createElement("dt");
                     var resLIpH = document.createElement("dt");
                     var resLIPPM = document.createElement("dt");
-                    {#                        var br = document.createElement("br");#}
                     var resATag = document.createElement("a");
                     var stat_pH = document.createElement("dd");
                     var stat_ppm = document.createElement("dd");
@@ -192,9 +207,12 @@
                     resATag.innerHTML = "<br>Reservoir ID: " + resPersonalID;
                     resUrl.appendChild(resATag);
                     resATag.setAttribute("res_id", res.id);
-                    resATag.addEventListener("click", function(event){
+                    resATag.setAttribute("personal_id", resPersonalID);
+                    resATag.addEventListener("click", function (event) {
                         var res_id = event.target.getAttribute("res_id");
-                        var resSubmit = "/Hydra/" + res_id + "/resmod/";
+                        var resSubmit = "/Hydra/modify_reservoir/" + res_id + "/";
+                        document.getElementById("resIDSpan").innerHTML = "Reservoir: " +
+                        event.target.getAttribute("personal_id");
                         var modResForm = document.getElementById("modResForm");
                         modResForm.setAttribute("action", resSubmit);
                         $('#modResArt').toggle('slow');
@@ -249,30 +267,25 @@
         request.open("GET", "/Hydra/data_grab/", true);
         request.send();
     };
-    function pause() {
-        clearTimeout(window.st);
-    }
+
     function resume() {
         window.st = setTimeout(grabData, 1000);
     }
-    $("li[id='addReservoir']").click(function () {
-        pause();
-        $("#addResDiv").toggle('slow');
-    });
 
-    grabData()
-</script>
-<script>
-    {#        forms#}
-    $("li[id='logIn']").click(function () {
-        $("#logInDiv").toggle('slow');
+    grabData();
+    function pause() {
+        clearTimeout(window.st);
+    }
+    $("#menuBar>li span").click(function () {
+        $(this).siblings().toggle('slow');
+        pause();
     });
-    $("li[id='addPlot']").click(function () {
-        $("#addPlotDiv").toggle('slow');
-    });
-    $("li[id='infoButton']").click(function () {
-        $("#changeInfo").toggle('slow');
-    });
+    function closeForm() {
+        var parent = $(event.target);
+        var closest = parent.closest('article');
+        $(closest).hide('slow');
+        resume();
+    }
 </script>
 </body>
 </html>

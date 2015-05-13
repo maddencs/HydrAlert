@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component name="dataSourceStorage">
-  <data-source name="db" uuid="56de2384-45ad-4f58-87af-0c200b562dba">
+  <data-source name="db" uuid="7daddbcf-9cc7-44f6-adff-ddce0438e32b">
     <database-info product="SQLite" version="3.7.6.3" jdbc-version="2.1" driver-name="SQLiteJDBC" driver-version="native"/>
     <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed"/>
     <schema name="" catalog=""/>
@@ -8,7 +8,7 @@
       <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
       <column name="time_failed" sqlType="DATETIME" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
       <column name="toaddrs" sqlType="VARCHAR(254)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
-      <column name="msg" sqlType="VARCHAR(3000)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
+      <column name="email_body" sqlType="VARCHAR(3000)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
       <column name="sent" sqlType="BOOL" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
       <column name="plot_zone_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
       <column name="res_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
@@ -16,12 +16,27 @@
       <primary-key columns="id"/>
       <foreign-key name="#FAKE_Hydra_alertemail_1" columns="user_id" ref-table="auth_user" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
       <foreign-key name="#FAKE_Hydra_alertemail_2" columns="res_id" ref-table="Hydra_reservoir" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
-      <foreign-key name="#FAKE_Hydra_alertemail_3" columns="plot_zone_id" ref-table="Hydra_plotzone" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_Hydra_alertemail_3" columns="plot_zone_id" ref-table="Hydra_plot" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
       <index name="Hydra_alertemail_e8701ad4" unique="true" columns="user_id"/>
       <index name="Hydra_alertemail_1a1cc17b" unique="true" columns="res_id"/>
       <index name="Hydra_alertemail_647e0eb6" unique="true" columns="plot_zone_id"/>
     </table>
-    <table name="Hydra_plotzone" schema="" catalog="" type="TABLE">
+    <table name="Hydra_alertplot" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="plot_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="lights" sqlType="BOOL" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <column name="humid" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="temp" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+    </table>
+    <table name="Hydra_alertres" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="ph" sqlType="REAL" precision="2000000000" scale="10" nullable="false" jdbcType="6"/>
+      <column name="ppm" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="res_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <primary-key columns="id"/>
+    </table>
+    <table name="Hydra_plot" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
       <column name="name" sqlType="VARCHAR(40)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
       <column name="plot_comments" sqlType="VARCHAR(500)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
@@ -36,12 +51,20 @@
       <column name="temp_alert" sqlType="BOOL" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
       <column name="light_alert" sqlType="BOOL" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
       <column name="alert_status" sqlType="BOOL" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
+      <primary-key columns="id"/>
+      <exported-key name="#FAKE_Hydra_alertemail_3" table="Hydra_alertemail" schema="" catalog="" columns="plot_zone_id"/>
+      <exported-key name="#FAKE_Hydra_plot_user_2" table="Hydra_plot_user" schema="" catalog="" columns="plot_id"/>
+      <exported-key name="#FAKE_Hydra_reservoir_1" table="Hydra_reservoir" schema="" catalog="" columns="plot_id"/>
+    </table>
+    <table name="Hydra_plot_user" schema="" catalog="" type="TABLE">
+      <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="plot_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
       <column name="user_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
       <primary-key columns="id"/>
-      <foreign-key name="#FAKE_Hydra_plotzone_1" columns="user_id" ref-table="auth_user" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
-      <exported-key name="#FAKE_Hydra_alertemail_3" table="Hydra_alertemail" schema="" catalog="" columns="plot_zone_id"/>
-      <exported-key name="#FAKE_Hydra_reservoir_1" table="Hydra_reservoir" schema="" catalog="" columns="plot_id"/>
-      <index name="Hydra_plotzone_e8701ad4" unique="true" columns="user_id"/>
+      <foreign-key name="#FAKE_Hydra_plot_user_1" columns="user_id" ref-table="auth_user" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_Hydra_plot_user_2" columns="plot_id" ref-table="Hydra_plot" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <index name="Hydra_plot_user_e8701ad4" unique="true" columns="user_id"/>
+      <index name="Hydra_plot_user_b9e8bb91" unique="true" columns="plot_id"/>
     </table>
     <table name="Hydra_reservoir" schema="" catalog="" type="TABLE">
       <column name="id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
@@ -51,13 +74,15 @@
       <column name="res_change_date" sqlType="DATE" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
       <column name="goal_ph_low" sqlType="REAL" precision="2000000000" scale="10" nullable="false" jdbcType="6"/>
       <column name="goal_ph_high" sqlType="REAL" precision="2000000000" scale="10" nullable="false" jdbcType="6"/>
+      <column name="goal_ppm" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
+      <column name="ppm_tolerance" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
       <column name="ph_alert" sqlType="BOOL" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
       <column name="ppm_alert" sqlType="BOOL" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
       <column name="res_change_alert" sqlType="BOOL" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
       <column name="alert_status" sqlType="BOOL" precision="2000000000" scale="10" nullable="true" jdbcType="4"/>
       <column name="plot_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
       <primary-key columns="id"/>
-      <foreign-key name="#FAKE_Hydra_reservoir_1" columns="plot_id" ref-table="Hydra_plotzone" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
+      <foreign-key name="#FAKE_Hydra_reservoir_1" columns="plot_id" ref-table="Hydra_plot" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
       <exported-key name="#FAKE_Hydra_alertemail_2" table="Hydra_alertemail" schema="" catalog="" columns="res_id"/>
       <exported-key name="#FAKE_Hydra_sensors_1" table="Hydra_sensors" schema="" catalog="" columns="res_id"/>
       <index name="Hydra_reservoir_b9e8bb91" unique="true" columns="plot_id"/>
@@ -68,7 +93,6 @@
       <column name="current_ph" sqlType="REAL" precision="2000000000" scale="10" nullable="false" jdbcType="6"/>
       <column name="sensor_pin" sqlType="VARCHAR(10)" precision="2000000000" scale="10" nullable="false" jdbcType="12"/>
       <column name="res_id" sqlType="INTEGER" precision="2000000000" scale="10" nullable="false" jdbcType="4"/>
-      <column name="current_ppm" sqlType="REAL" precision="2000000000" scale="10" nullable="false" jdbcType="6"/>
       <primary-key columns="id"/>
       <foreign-key name="#FAKE_Hydra_sensors_1" columns="res_id" ref-table="Hydra_reservoir" ref-schema="" ref-catalog="" ref-columns="id" update-rule="3" delete-rule="3" deferrability="1"/>
       <index name="Hydra_sensors_1a1cc17b" unique="true" columns="res_id"/>
@@ -115,7 +139,7 @@
       <column name="last_login" sqlType="DATETIME" precision="2000000000" scale="10" nullable="true" jdbcType="12"/>
       <primary-key columns="id"/>
       <exported-key name="#FAKE_Hydra_alertemail_1" table="Hydra_alertemail" schema="" catalog="" columns="user_id"/>
-      <exported-key name="#FAKE_Hydra_plotzone_1" table="Hydra_plotzone" schema="" catalog="" columns="user_id"/>
+      <exported-key name="#FAKE_Hydra_plot_user_1" table="Hydra_plot_user" schema="" catalog="" columns="user_id"/>
       <exported-key name="#FAKE_auth_user_groups_2" table="auth_user_groups" schema="" catalog="" columns="user_id"/>
       <exported-key name="#FAKE_auth_user_user_permissions_2" table="auth_user_user_permissions" schema="" catalog="" columns="user_id"/>
       <exported-key name="#FAKE_django_admin_log_1" table="django_admin_log" schema="" catalog="" columns="user_id"/>

@@ -8,7 +8,7 @@ django.setup()
 
 from django.http import HttpResponse
 from django.shortcuts import render
-from Hydra.models import PlotZone
+from Hydra.models import Plot, AlertEmail
 from datetime import datetime
 import smtplib
 
@@ -42,13 +42,13 @@ def light_check(plot_object, curr_time):
         return False
 
 
-def reset_alerts():
-    for Plot in PlotZone.objects.all():
-        Plot.temp_alert_sent = False
-        Plot.light_alert_sent = False
-        Plot.humid_alert_sent = False
-        Plot.save()
-        for res in Plot.reservoir_set.all():
+def reset_alerts(request):
+    for p in Plot.objects.filter(user=request.user):
+        p.temp_alert_sent = False
+        p.light_alert_sent = False
+        p.humid_alert_sent = False
+        p.save()
+        for res in p.reservoir_set.all():
             res.ph_alert_sent = False
             res.ppm_alert_sent = False
             res.res_change_alert = False
@@ -69,8 +69,7 @@ def send_email(email):
         pass
 
 
-def compile_alerts(user, email_plot_list, res_list):
-    user = user
-    plt_lst = email_plot_list
-    res_list = res_list
-    return render('Hydra/alert_email.html', user, res_list, plt_lst)
+# def make_mail(user):
+#     email_object = AlertEmail.objects.get_or_create(user=user, plot_alerts=plot_list, res_alerts=res_list)
+#     email_object.save()
+#     return render('Hydra/alert_email.html', user, res_list, plot_list)

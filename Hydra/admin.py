@@ -1,7 +1,7 @@
 from django.contrib import admin
-from Hydra.models import Sensors, PlotZone, Reservoir
+from Hydra.models import Sensors, Plot, Reservoir
 
 
-admin.site.register(PlotZone)
+admin.site.register(Plot)
 admin.site.register(Reservoir)
 admin.site.register(Sensors)
