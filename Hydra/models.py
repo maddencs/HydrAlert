@@ -1,8 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django import forms
-from hydralib import within_range, light_check
-from datetime import datetime
 
 SENSOR_CHOICES = [('ppm', 'PPM Sensor'), ('pH', 'pH Sensor'), ('temp', 'Temp/Humid Sensor'), ('light', 'Light Sensor'), ]
 
@@ -15,25 +13,22 @@ class Plot(models.Model):
     current_humid = models.IntegerField(default=0)
     light_start = models.TimeField(blank=True, null=True)
     light_stop = models.TimeField(blank=True, null=True)
-    light_status = models.BooleanField(default=True)
+    light_status = models.NullBooleanField(blank=True, null=True)
     goal_temp = models.IntegerField(default=0)
     temp_tolerance = models.IntegerField(default=5)
     goal_humid = models.IntegerField(default=0)
+    humid_tolerance = models.IntegerField(default=5)
     humid_alert = models.NullBooleanField(default=False)
     temp_alert = models.NullBooleanField(default=False)
     light_alert = models.NullBooleanField(default=False)
     alert_status = models.NullBooleanField(default=False)
 
-    def check_stats(self):
-        if not light_check(self, datetime.now().time()):
-            self.light_alert = True
-            self.light_status = False
-        if not within_range(self.goal_temp, self.current_temp, self.temp_tolerance):
-            self.temp_alert = True
-
     def check_alerts(self):
         if not self.temp_alert or not self.humid_alert or not self.light_alert:
-            self.light_alert = True
+            self.alert_status = True
+            return True
+        else:
+            return False
 
     def __str__(self):
         return "Plot Zone " + str(self.id)
@@ -54,17 +49,12 @@ class Reservoir(models.Model):
     res_change_alert = models.NullBooleanField(default=False)
     alert_status = models.NullBooleanField(default=False)
 
-    def check_stats(self):
-        if self.goal_ph_high < self.current_ph < self.goal_ph_low:
-            self.ph_alert = True
-        if not within_range(self.goal_ppm, self.current_ppm, self.ppm_tolerance):
-            self.ppm_alert = True
-        if self.res_change_date < datetime.datetime:
-            self.res_change_alert = True
-
     def check_alerts(self):
         if not self.ph_alert or not self.ppm_alert or not self.res_change_alert:
             self.alert_status = True
+            return True
+        else:
+            return False
 
     def __str__(self):
         return "Plot zone #" + str(self.plot.id) + "'s Reservoir #" + str(self.id)
@@ -95,7 +85,7 @@ class Sensors(models.Model):
 
 
 class AlertEmail(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, null=True)
     time_failed = models.DateTimeField()
     res = models.ForeignKey(Reservoir)
     plot_zone = models.ForeignKey(Plot)
@@ -106,29 +96,29 @@ class AlertEmail(models.Model):
 
 
 class AlertPlot(models.Model):
-    user = models.ForeignKey(User)
-    plot_id = models.IntegerField(default=0)
-    lights = models.NullBooleanField(default=False)
-    temp = models.IntegerField(default=0)
-    humid = models.IntegerField(default=0)
+    user = models.ForeignKey(User, null=True, blank=True)
+    plot_id = models.IntegerField(default=None, null=True, blank=True)
+    lights = models.NullBooleanField(null=True, blank=True)
+    temp = models.IntegerField(default=None, null=True, blank=True)
+    humid = models.IntegerField(default=None, null=True, blank=True)
 
 
 class AlertRes(models.Model):
-    user = models.ForeignKey(User)
-    res_id = models.IntegerField(default=0)
-    ph = models.FloatField(default=0)
-    ppm = models.IntegerField(default=0)
+    res = models.ForeignKey(Reservoir, null=True, blank=True)
+    ph = models.FloatField(default=None, null=True, blank=True)
+    ppm = models.IntegerField(default=0, null=True, blank=True)
 
 
-class PlotForm(forms.ModelForm):
-    class Meta:
-        model = Plot
-        exclude = ('current_temp', 'lights_on', 'current_humid', 'user', 'humid_alert_sent', 'temp_alert_sent',
-                   'light_alert_sent', )
+class PlotHistory(models.Model):
+    plot = models.ForeignKey(Plot, blank=True, null=True)
+    date = models.DateField(blank=True, null=True)
+    light_status = models.NullBooleanField()
+    temp = models.IntegerField(default=None, null=True, blank=True)
+    humid = models.IntegerField(default=None,  null=True, blank=True)
 
 
-class ReservoirForm(forms.ModelForm):
-    class Meta:
-        model = Reservoir
-        fields = ['goal_ppm', 'goal_ph_low', 'goal_ph_high', 'ppm_tolerance']
-        exclude = ('plot', 'current_ph', 'current_ppm', 'ph_alert_sent', 'ppm_alert_sent', 'res_change_alert',)
+class ResHistory(models.Model):
+    res = models.ForeignKey(Reservoir, blank=True, null=True)
+    date = models.DateField(blank=True, null=True)
+    ph = models.IntegerField(default=None,  null=True, blank=True)
+    ppm = models.IntegerField(default=None,  null=True, blank=True)

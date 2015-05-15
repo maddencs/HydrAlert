@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect, HttpResponse
-from .models import Reservoir, Plot, Sensors, AlertPlot, AlertRes, PlotForm
+from .models import Reservoir, Plot, Sensors, AlertPlot, AlertRes, PlotHistory, ResHistory
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -40,7 +40,8 @@ def login_view(request):
 
 def logout_view(request):
     if request.POST:
-        return logout(request)
+        logout(request)
+    return redirect('login')
 
 
 @login_required(login_url='/Hydra/login/')
@@ -75,6 +76,23 @@ def data_grab(request):
 
     return HttpResponse(json.dumps({'plot_list': grab_plot_list, 'res_list': grab_res_list}, indent=4),
                         content_type='application/json')
+
+
+def plot_history(request, plot_id):
+    history_plots = PlotHistory.objects.filter(plot=plot_id)
+    history = []
+    for p in history_plots:
+        history.append({'date': str(p.date), 'lights': p.light_status, 'temp': p.temp, 'humid': p.humid, })
+    return HttpResponse(json.dumps({'plot_list': history}, indent=4), content_type='application/json')
+
+
+def res_history(request, res_id):
+    history_res = ResHistory.objects.filter(res=res_id)
+    res_list = []
+    for r in history_res:
+        res_list.append({'date': r.date, 'ph': r.ph, 'ppm': r.ppm, })
+    return HttpResponse(json.dumps({'res_list': res_list}, indent=4), content_type='application/json')
+
 
 
 @login_required(login_url='/Hydra/login/')
@@ -182,25 +200,11 @@ def modify_plot(request, plot_id):
     except Plot.DoesNotExist:
         p = None
 
-    plot_comments = p.plot_comments
-    light_start = p.light_start
-    light_stop = p.light_stop
-    goal_temp = p.goal_temp
-    goal_humid = p.goal_humid
-    plot_id = p.id
-    prepop_data = {'plot_id': plot_id, 'comments': plot_comments, 'light_start': light_start,
-                   'light_stop': light_stop, 'goal_temp': goal_temp, 'goal_humid': goal_humid, }
     if request.method == 'POST':
-        form = PlotForm(request.POST, instance=p)
-        if form.is_valid():
-            form.save()
-            return redirect('plot_list')
-
-        else:
-            print(form.errors)
-    else:
-        form = PlotForm(instance=p, initial=prepop_data)
-
-    context = {'form': form, 'plot_id': plot_id, 'plot_comments': plot_comments, 'light_start': light_start,
-               'light_stop': light_stop, 'goal_temp': goal_temp, 'goal_humid': goal_humid, }
-    return render(request, 'Hydra/modify_plot.html', context)
+        p.light_start = request.POST['light_start']
+        p.light_stop = request.POST['light_stop']
+        p.goal_temp = request.POST['goal_temp']
+        p.goal_humid = request.POST['goal_humid']
+        p.temp_tolerance = request.POST['temp_tolerance']
+        p.humid_tolerance = request.POST['humid_tolerance']
+        return HttpResponse()

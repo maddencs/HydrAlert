@@ -98,7 +98,7 @@ form label {
 }
 
 .plotDetails{
-    margin: 1em;
+    width: 20em;
 }
 
 ul dt a {
@@ -107,10 +107,10 @@ ul dt a {
 }
 
 #menuBar {
-    align-content: center;
     float: left;
     position: fixed;
     margin-top: 6em;
+    width: auto;
 }
 
 #menuBar li {
@@ -156,17 +156,20 @@ ul dt a {
 }
 
 #menuWrap {
-    z-index: 10;
+    z-index: 0;
     align-content: center;
-    position: relative;
+    position: fixed;
+    float: left;
+    margin: 0;
 }
 
 
 
 #plotDiv {
-    z-index: 1;
+    z-index: 0;
     float: right;
     margin-top: 6em;
+    margin-right: 0;
 }
 
 
@@ -183,15 +186,11 @@ input {
     width: auto;
 }
 
-article {
-    align-items: center;
-    width: 10em;
-}
-
-#modResArt {
+#menuBar article {
     display:none;
     width: 5em;
-    position: relative;
+    position: absolute;
+    z-index: 55;
 }
 
 a{
@@ -205,7 +204,6 @@ li article {
     border-radius: 5px 100px 0 125px;
     position: relative;
     font-weight: bold;
-    width: 100%;
     cursor: default;
     clear:both;
 }
@@ -223,9 +221,9 @@ li>span{
 .leafShape {
     max-width: 90%;
     overflow: hidden;
-    margin: 1em;
+    margin: 5px;
     padding: 1em;
-    box-shadow: 10px 10px 20px 10px rgba(0,0,0,.5);
+    box-shadow: 3px 3px 30px 3px rgba(0,0,0,.5);
     background: linear-gradient(100deg, darkgreen, forestgreen);
     align-content: center;
 }
