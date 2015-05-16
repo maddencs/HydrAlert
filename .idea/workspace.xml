@@ -4,28 +4,7 @@
     <option name="ANALYSIS_IN_BACKGROUND" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7fac9b34-ef15-468f-9641-ce3e86b304e6" name="Default" comment="">
-      <change type="DELETED" beforePath="C:\projects\HydrAlert\Hydra\migrations\0001_initial.py" afterPath="" />
-      <change type="DELETED" beforePath="C:\projects\HydrAlert\Hydra\migrations\0002_auto_20150512_1529.py" afterPath="" />
-      <change type="DELETED" beforePath="C:\projects\HydrAlert\Hydra\migrations\0003_auto_20150512_1531.py" afterPath="" />
-      <change type="DELETED" beforePath="C:\projects\HydrAlert\Hydra\migrations\0004_alertplot_user.py" afterPath="" />
-      <change type="DELETED" beforePath="C:\projects\HydrAlert\Hydra\migrations\0005_alertres_user.py" afterPath="" />
-      <change type="DELETED" beforePath="C:\projects\HydrAlert\db.sqlite3" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dataSources.ids" afterPath="$PROJECT_DIR$/.idea/dataSources.ids" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/check_stats.py" afterPath="$PROJECT_DIR$/check_stats.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dataSources.xml" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Hydra/templates/Hydra/graph_page.html" afterPath="$PROJECT_DIR$/Hydra/templates/Hydra/graph_page.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hydralib.py" afterPath="$PROJECT_DIR$/hydralib.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/main.css" afterPath="$PROJECT_DIR$/static/main.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Hydra/models.py" afterPath="$PROJECT_DIR$/Hydra/models.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Hydra/templates/Hydra/plot_page.html" afterPath="$PROJECT_DIR$/Hydra/templates/Hydra/plot_page.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HydrAlert/settings.py" afterPath="$PROJECT_DIR$/HydrAlert/settings.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Hydra/urls.py" afterPath="$PROJECT_DIR$/Hydra/urls.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Hydra/views.py" afterPath="$PROJECT_DIR$/Hydra/views.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="7fac9b34-ef15-468f-9641-ce3e86b304e6" name="Default" comment="" />
     <ignored path="HydroPynix.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path=".idea/dataSources.local.xml" />
