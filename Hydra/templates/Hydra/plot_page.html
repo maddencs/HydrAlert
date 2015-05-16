@@ -183,14 +183,18 @@
                 var brCln = br.cloneNode(true);
                 plotResUL.classList.add('col-md-5');
                 delPlot.innerHTML = "Delete this plot";
-                $(delPlot).click(function () {
-                            $.ajax("/Hydra/delete/plot/" + plot.id)
-                                    .done(function () {
-                                        alert("Plot deleted!");
-                                    })
-                                    .fail(function () {
-                                        alert("Plot could not be deleted...");
-                                    });
+                delPlot.setAttribute("plot_id", plot.id);
+                $(delPlot).click(function (event) {
+                    var plotId = event.target.getAttribute("plot_id");
+                    if(confirm("Are you sure you wish to delete this plot?")) {
+                        $.ajax("/Hydra/delete/plot/" + plotId)
+                                .done(function () {
+                                    alert("Plot deleted!");
+                                })
+                                .fail(function () {
+                                    alert("Plot could not be deleted...");
+                                });
+                    }
                         });
                 plotOption.innerHTML = plotPersonalID;
                 plotOption.value = plot.id;
@@ -250,20 +254,24 @@
                         var stat_pH = document.createElement("dd");
                         var stat_ppm = document.createElement("dd");
                         var delRes = document.createElement("a");
-                        $(delRes).click(function () {
-                            $.ajax("/Hydra/delete/reservoir/" + res.id)
-                                    .done(function () {
-                                        alert("Reservoir deleted!");
-                                    })
-                                    .fail(function () {
-                                        alert("Reservoir could not be deleted...");
-                                    });
-                        });
+                        $(delRes).click(function(event){
+                            if(confirm("Are you sure you want to delete the reservoir?")){
+                                var resId = event.target.getAttribute("res_id");
+                                        $.ajax("/Hydra/delete/reservoir/" + resId)
+                                                .done(function () {
+                                                    alert("Reservoir deleted!");
+                                                })
+                                                .fail(function () {
+                                                    alert("Reservoir could not be deleted...");
+                                                });
+                                    }
+                                });
                         delRes.innerHTML = "Delete<br>Reservoir";
                         delRes.id = res.id;
                         resATag.innerHTML = "<br>Reservoir ID: " + resPersonalID;
                         resUrl.appendChild(resATag);
                         resATag.setAttribute("res_id", res.id);
+                        delRes.setAttribute("res_id", res.id);
                         resATag.setAttribute("personal_id", resPersonalID);
                         {#                    sets action on modify res form to the clicked on reservoir#}
                         resATag.addEventListener("click", function (event) {

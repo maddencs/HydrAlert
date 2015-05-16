@@ -135,9 +135,10 @@ def add_res(request):
 @login_required(login_url='/Hydra/login/')
 def delete_plot(request, plot_id):
     p = Plot.objects.filter(id=plot_id)
-    res_list = Reservoir.objects.filter(plot=p)
+    res_list = Reservoir.objects.filter(plot=plot_id)
     p.delete()
     for res in res_list:
+        print(res.id)
         res.delete()
     return HttpResponse()
 

@@ -22,12 +22,13 @@
 *.rar
 *.tar
 *.zip
+bower_components/
  
 # Logs and databases #
 ######################
 *.log
 *.sql
-*.sqlite
+*.sqlite*
  
 # OS generated files #
 ######################
