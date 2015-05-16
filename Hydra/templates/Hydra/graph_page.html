@@ -1,19 +1,23 @@
-<!DOCTYPE html>
+{% load staticfiles %}
 <html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-<script src="http://d3js.org/d3.v3.js"></script>
-    <script>
+    <head>
+        <title>django-chartjs line chart demo</title>
+        <!--[if lte IE 8]>
+            <script src="{% static 'js/excanvas.js' %}"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <h1>Some Line Charts loaded in Ajax!</h1>
 
-        var data;
-        d3.json("/Hydra/plot_history/{{ plot_id }}/", function(err, data) {
-            color.domain(d3.keys(data[]))
-        })
+        <canvas id="myChart" width="500" height="400"></canvas>
 
-    </script>
-
-</body>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+        <script type="text/javascript" src="{% static 'js/Chart.min.js' %}"></script>
+        <script type="text/javascript">
+            $.get('{% url "line_chart_json" %}', function(data) {
+                var ctx = $("#myChart").get(0).getContext("2d");
+                new Chart(ctx).Line(data);
+            });
+        </script>
+    </body>
 </html>

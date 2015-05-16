@@ -20,29 +20,30 @@
             $('#modResForm').ajaxForm(function () {
                 alert("Reservoir modified!");
             });
-            $('#modPlotForm').ajaxForm(function() {
+            $('#modPlotForm').ajaxForm(function () {
                 alert("Plot modified!");
             });
             $('#changeInfo').ajaxForm(function () {
                 alert("Info updated!");
-            })
+            });
         });
     </script>
     <link href='http://fonts.googleapis.com/css?family=Bilbo+Swash+Caps' rel='stylesheet' type='text/css'>
 </head>
 <body>
 <header></header>
-<div class="col-sm-2" id="menuWrap">
+<div class="col-md-2" id="menuWrap">
     <ul id="menuBar">
         <article class="leafShape input-small col-md-3" id="modResArt">
             <span id="closeButton" onclick="closeForm()">X</span>
             <span id="resIDSpan"></span>
+
             <form class="input-small" action="/Hydra/modify/reservoir/{{ res_id }}/" method="POST" id="modResForm">
                 {% csrf_token %}
                 <label for="goal_ph_low">Lower pH Limit:</label>
                 <input type="number" name="goal_ph_low" step=".1" id="goal_ph_low">
                 <label for="goal_ph_high">Upper pH Limit:</label>
-                <input type="number" step=".1" name ="goal_ph_high" id="goal_ph_high">
+                <input type="number" step=".1" name="goal_ph_high" id="goal_ph_high">
                 <label for="goal_ppm">Goal PPM:</label>
                 <input type="number" name="goal_ppm" id="goal_ppm">
                 <label for="ppm_tolerance">PPM Tolerance:</label>
@@ -50,9 +51,10 @@
                 <input type="submit" onclick="closeForm()" value="Save">
             </form>
         </article>
-         <article class="leafShape input-small col-md-3" id="modPlotArt">
+        <article class="leafShape input-small col-md-3" id="modPlotArt">
             <span id="closeButton" onclick="closeForm()">X</span>
             <span id="plotIDSpan"></span>
+
             <form class="input-small" action="/Hydra/modify/plot/{{ plot_id }}/" method="POST" id="modPlotForm">
                 {% csrf_token %}
                 <label for="light_start">Light Start Time: </label>
@@ -72,9 +74,10 @@
         </article>
         <li id="plotPage">Plot List</li>
         <li id="addPlot"><span>Add Plot</span>
-                <br>
+            <br>
             <article class="col-md-3 leafShape" id="addPlotDiv">
                 <a id="closeButton" onclick="closeForm()">X</a>
+
                 <form id="plotForm" action="/Hydra/add/plot/" method="POST">
                     {% csrf_token %}
                     <label for="light_start">Lights Start Time: </label>
@@ -90,9 +93,10 @@
             </article>
         </li>
         <li id="addReservoir" onclick="pause()"><span>Add Reservoir</span>
-                <br>
+            <br>
             <article id="addResDiv" class="leafShape">
                 <a id="closeButton" onclick="closeForm()">X</a>
+
                 <form id="resForm" action="/Hydra/add/reservoir/" method="POST">
                     {% csrf_token %}
                     <label for="plot">Plot: </label>
@@ -111,9 +115,10 @@
         </li>
         <li id="logOut"><a href="/Hydra/logout/">Logout</a></li>
         <li id="logIn"><span>Log In</span>
-                <br>
+            <br>
             <article id="logInDiv" class="leafShape">
                 <a id="closeButton" onclick="closeForm()">X</a>
+
                 <form action="/Hydra/login/" class="input-small" method="POST">
                     {% csrf_token %}
                     <label for="username">Username: </label>
@@ -125,9 +130,10 @@
             </article>
         </li>
         <li id="infoButton"><span>Change Personal Info</span>
-                <br>
+            <br>
             <article id="changeInfo" class="leafShape">
                 <a id="closeButton" onclick="closeForm()">X</a>
+
                 <form method="POST" id="changeInfo" class="input-small" action="/Hydra/change_info/">
                     {% csrf_token %}
                     <label for="email">Email Address</label>
@@ -140,190 +146,205 @@
         </li>
 
 
-
     </ul>
 </div>
 <br>
 
 
-<div class="col-md-10" id="plotDiv"></div>
+<div class="col-md-9" id="plotDiv"></div>
 <script src="http://malsup.github.com/jquery.form.js"></script>
 <script>
-    var t = 0;
-    var request = new XMLHttpRequest();
-    var greenSrc = '{% static 'icons_lights_green.png' %}';
-    var redSrc = '{% static 'icons_lights_red.png' %}';
-    var yellowSrc = '{% static 'icons_lights_yellow.gif' %}';
-    var draw = function (data) {
-        var plotPersonalID = 1;
-        var plotDropDown = document.getElementById('plotDropDown');
-        plotDropDown.innerHTML = "";
-        document.getElementById('plotDiv').innerHTML = "";
-        for (var p = 0; p < data['plot_list'].length; p++) {
-            var plot = data['plot_list'][p];
-            var plotElement = document.createElement("article");
-            var resList = data['res_list'];
-            var plotResUL = document.createElement("ul");
-            var resPersonalID = 1;
-            var plotUrl = document.createElement("a");
-            var greenLight = document.createElement("img");
-            var redLight = document.createElement("img");
-            var yellowLight = document.createElement("img");
-            var plotLILights = document.createElement("span");
-            var plotDetails = document.createElement("div");
-            var plotOption = document.createElement("option");
-            var delPlot = document.createElement("a");
-            var br = document.createElement("br");
-            var brCln = br.cloneNode(true);
-            plotResUL.classList.add('col-md-5');
-            delPlot.innerHTML = "Delete this plot";
-            delPlot.setAttribute("href", "/Hydra/delete/plot/" + plot.id);
-            delPlot.setAttribute("onclick", "return confirm('Are you sure you want to delete this? All children" +
-            " reservoirs will be deleted, as well...');");
-            plotOption.innerHTML = plotPersonalID;
-            plotOption.value = plot.id;
-            plotOption.classList.add('col-md-2');
-            plotDropDown.appendChild(plotOption);
-            plotDetails.id = "plotDetails";
-            greenLight.setAttribute("src", greenSrc);
-            yellowLight.setAttribute("src", yellowSrc);
-            redLight.setAttribute("src", redSrc);
-            plotElement.classList.add('col-md-4');
-            if (plot.alert_status == true) {
-                plotElement.classList.add('plotAlert');
-            } else {
-                plotElement.classList.add('leafShape');
-            }
-            plotUrl.setAttribute("personal_id", plotPersonalID);
-            plotUrl.addEventListener("click", function (event) {
-                var plot_id = event.target.getAttribute("plot_id");
-                var plotSubmit = "/Hydra/modify/reservoir/" + plot_id + "/";
-                document.getElementById("plotIDSpan").innerHTML = "Plot: " +
-                event.target.getAttribute("personal_id");
-                var modPlotForm = document.getElementById("modPlotForm");
-                modPlotForm.setAttribute("action", plotSubmit);
-                $('#modPlotArt').toggle('slow');
-            });
-            plotUrl.innerHTML = "Plot ID: " + plotPersonalID;
-            plotElement.appendChild(plotDetails);
-            plotDetails.appendChild(plotUrl);
-            plotDetails.appendChild(brCln);
-            plotDetails.appendChild(delPlot);
-            var anotherBr = document.createElement("br");
-            plotDetails.appendChild(anotherBr);
-            plotDetails.appendChild(plotLILights);
-            plotDetails.appendChild(plotResUL);
-            plotResUL.classList.add('list-unstyled');
-            if (plot.light_status == true) {
-                plotLILights.innerHTML = "<br> Light Status: ";
-                plotLILights.appendChild(greenLight);
-            } else if(plot.light_status == false) {
-                plotLILights.innerHTML = "<br> Light Status: ";
-                plotLILights.appendChild(redLight);
-            } else {
-                plotLILights.innerHTML = "<br> Light Status: ";
-                plotLILights.appendChild(yellowLight);
-            }
-            plotPersonalID++;
-            for (var r = 0; r < resList.length; r++) {
-                var res = resList[r];
-                var resUL = document.createElement('dl');
-                resUL.classList.add('dl-horizontal');
-                plotElement.appendChild(resUL);
-                if (res.plot == plot.id) {
-                    var resUrl = document.createElement("dt");
-                    var resLIpH = document.createElement("dt");
-                    var resLIPPM = document.createElement("dt");
-                    var resATag = document.createElement("a");
-                    var stat_pH = document.createElement("dd");
-                    var stat_ppm = document.createElement("dd");
-                    var delRes = document.createElement("a");
-                    delRes.innerHTML = "Delete<br>Reservoir";
-                    delRes.setAttribute("onclick", "return confirm('Are you sure you want to delete this?');");
-                    delRes.setAttribute("href", "/Hydra/delete/reservoir/" + res.id);
-                    resATag.innerHTML = "<br>Reservoir ID: " + resPersonalID;
-                    resUrl.appendChild(resATag);
-                    resATag.setAttribute("res_id", res.id);
-                    resATag.setAttribute("personal_id", resPersonalID);
-{#                    sets action on modify res form to the clicked on reservoir#}
-                    resATag.addEventListener("click", function (event) {
-                        var res_id = event.target.getAttribute("res_id");
-                        var resSubmit = "/Hydra/modify/reservoir/" + res_id + "/";
-                        document.getElementById("resIDSpan").innerHTML = "Reservoir: " +
-                        event.target.getAttribute("personal_id");
-                        var modResForm = document.getElementById("modResForm");
-                        modResForm.setAttribute("action", resSubmit);
-                        $('#modResArt').toggle('slow');
-                    });
-                    resLIpH.innerHTML = "Current pH:";
-                    var curpH = document.createElement("span");
-                    curpH.innerHTML = res.current_ph;
-                    stat_pH.appendChild(curpH);
-                    resLIPPM.innerHTML = "Current PPM: ";
-                    stat_ppm.innerHTML = res.current_ppm;
-                    plotResUL.appendChild(resUrl);
-                    plotResUL.appendChild(delRes);
-                    plotResUL.appendChild(resUL);
-                    plotResUL.appendChild(br);
-                    resUL.appendChild(resLIpH);
-                    resUL.appendChild(stat_pH);
-                    resUL.appendChild(resLIPPM);
-                    resUL.appendChild(stat_ppm);
-                    if (res.current_ph < res.goal_ph_low) {
-                        stat_pH.classList.add('phBad');
-                        var dnArrow = document.createElement("span");
-                        dnArrow.innerHTML = "&darr;";
-                        stat_pH.style.fontWeight = "bold";
-                        stat_pH.insertBefore(dnArrow, curpH);
-                    } else if (res.current_ph > res.goal_ph_high) {
-                        stat_pH.classList.add('phBad');
-                        var upArrow = document.createElement("span");
-                        upArrow.innerHTML = "&uarr;";
-                        stat_pH.style.fontWeight = "bold";
-                        stat_pH.insertBefore(upArrow, curpH);
-                    }
-                    resPersonalID++;
-                }
-            }
 
-            document.getElementById('plotDiv').appendChild(plotElement);
-            clearTimeout(window.st);
+        var t = 0;
+        var request = new XMLHttpRequest();
+        var greenSrc = '{% static 'icons_lights_green.png' %}';
+        var redSrc = '{% static 'icons_lights_red.png' %}';
+        var yellowSrc = '{% static 'icons_lights_yellow.gif' %}';
+        var draw = function (data) {
+            var plotPersonalID = 1;
+            var plotDropDown = document.getElementById('plotDropDown');
+            plotDropDown.innerHTML = "";
+            document.getElementById('plotDiv').innerHTML = "";
+            for (var p = 0; p < data['plot_list'].length; p++) {
+                var plot = data['plot_list'][p];
+                var plotElement = document.createElement("article");
+                var resList = data['res_list'];
+                var plotResUL = document.createElement("ul");
+                var resPersonalID = 1;
+                var plotUrl = document.createElement("a");
+                var greenLight = document.createElement("img");
+                var redLight = document.createElement("img");
+                var yellowLight = document.createElement("img");
+                var plotLILights = document.createElement("span");
+                var plotDetails = document.createElement("div");
+                var plotOption = document.createElement("option");
+                var delPlot = document.createElement("a");
+                var br = document.createElement("br");
+                var brCln = br.cloneNode(true);
+                plotResUL.classList.add('col-md-5');
+                delPlot.innerHTML = "Delete this plot";
+                $(delPlot).click(function () {
+                            $.ajax("/Hydra/delete/plot/" + plot.id)
+                                    .done(function () {
+                                        alert("Plot deleted!");
+                                    })
+                                    .fail(function () {
+                                        alert("Plot could not be deleted...");
+                                    });
+                        });
+                plotOption.innerHTML = plotPersonalID;
+                plotOption.value = plot.id;
+                plotOption.classList.add('col-md-2');
+                plotDropDown.appendChild(plotOption);
+                plotDetails.id = "plotDetails";
+                greenLight.setAttribute("src", greenSrc);
+                yellowLight.setAttribute("src", yellowSrc);
+                redLight.setAttribute("src", redSrc);
+                plotElement.classList.add('col-md-4');
+                if (plot.alert_status == true) {
+                    plotElement.classList.add('plotAlert');
+                } else {
+                    plotElement.classList.add('leafShape');
+                }
+                plotUrl.setAttribute("personal_id", plotPersonalID);
+                plotUrl.addEventListener("click", function (event) {
+                    var plot_id = event.target.getAttribute("plot_id");
+                    var plotSubmit = "/Hydra/modify/reservoir/" + plot_id + "/";
+                    document.getElementById("plotIDSpan").innerHTML = "Plot: " +
+                            event.target.getAttribute("personal_id");
+                    var modPlotForm = document.getElementById("modPlotForm");
+                    modPlotForm.setAttribute("action", plotSubmit);
+                    $('#modPlotArt').toggle('slow');
+                });
+                plotUrl.innerHTML = "Plot ID: " + plotPersonalID;
+                plotElement.appendChild(plotDetails);
+                plotDetails.appendChild(plotUrl);
+                plotDetails.appendChild(brCln);
+                plotDetails.appendChild(delPlot);
+                var anotherBr = document.createElement("br");
+                plotDetails.appendChild(anotherBr);
+                plotDetails.appendChild(plotLILights);
+                plotDetails.appendChild(plotResUL);
+                plotResUL.classList.add('list-unstyled');
+                if (plot.light_status == true) {
+                    plotLILights.innerHTML = "<br> Light Status: ";
+                    plotLILights.appendChild(greenLight);
+                } else if (plot.light_status == false) {
+                    plotLILights.innerHTML = "<br> Light Status: ";
+                    plotLILights.appendChild(redLight);
+                } else {
+                    plotLILights.innerHTML = "<br> Light Status: ";
+                    plotLILights.appendChild(yellowLight);
+                }
+                plotPersonalID++;
+                for (var r = 0; r < resList.length; r++) {
+                    var res = resList[r];
+                    var resUL = document.createElement('dl');
+                    resUL.classList.add('dl-horizontal');
+                    plotElement.appendChild(resUL);
+                    if (res.plot == plot.id) {
+                        var resUrl = document.createElement("dt");
+                        var resLIpH = document.createElement("dt");
+                        var resLIPPM = document.createElement("dt");
+                        var resATag = document.createElement("a");
+                        var stat_pH = document.createElement("dd");
+                        var stat_ppm = document.createElement("dd");
+                        var delRes = document.createElement("a");
+                        $(delRes).click(function () {
+                            $.ajax("/Hydra/delete/reservoir/" + res.id)
+                                    .done(function () {
+                                        alert("Reservoir deleted!");
+                                    })
+                                    .fail(function () {
+                                        alert("Reservoir could not be deleted...");
+                                    });
+                        });
+                        delRes.innerHTML = "Delete<br>Reservoir";
+                        delRes.id = res.id;
+                        resATag.innerHTML = "<br>Reservoir ID: " + resPersonalID;
+                        resUrl.appendChild(resATag);
+                        resATag.setAttribute("res_id", res.id);
+                        resATag.setAttribute("personal_id", resPersonalID);
+                        {#                    sets action on modify res form to the clicked on reservoir#}
+                        resATag.addEventListener("click", function (event) {
+                            var res_id = event.target.getAttribute("res_id");
+                            var resSubmit = "/Hydra/modify/reservoir/" + res_id + "/";
+                            document.getElementById("resIDSpan").innerHTML = "Reservoir: " +
+                                    event.target.getAttribute("personal_id");
+                            var modResForm = document.getElementById("modResForm");
+                            modResForm.setAttribute("action", resSubmit);
+                            $('#modResArt').toggle('slow');
+                        });
+                        resLIpH.innerHTML = "Current pH:";
+                        var curpH = document.createElement("span");
+                        curpH.innerHTML = res.current_ph;
+                        stat_pH.appendChild(curpH);
+                        resLIPPM.innerHTML = "Current PPM: ";
+                        stat_ppm.innerHTML = res.current_ppm;
+                        plotResUL.appendChild(resUrl);
+                        plotResUL.appendChild(delRes);
+                        plotResUL.appendChild(resUL);
+                        plotResUL.appendChild(br);
+                        resUL.appendChild(resLIpH);
+                        resUL.appendChild(stat_pH);
+                        resUL.appendChild(resLIPPM);
+                        resUL.appendChild(stat_ppm);
+                        if (res.current_ph < res.goal_ph_low) {
+                            stat_pH.classList.add('phBad');
+                            var dnArrow = document.createElement("span");
+                            dnArrow.innerHTML = "&darr;";
+                            stat_pH.style.fontWeight = "bold";
+                            stat_pH.insertBefore(dnArrow, curpH);
+                        } else if (res.current_ph > res.goal_ph_high) {
+                            stat_pH.classList.add('phBad');
+                            var upArrow = document.createElement("span");
+                            upArrow.innerHTML = "&uarr;";
+                            stat_pH.style.fontWeight = "bold";
+                            stat_pH.insertBefore(upArrow, curpH);
+                        }
+                        resPersonalID++;
+                    }
+                }
+
+                document.getElementById('plotDiv').appendChild(plotElement);
+                clearTimeout(window.st);
+                window.st = setTimeout(grabData, 1000);
+            }
+        };
+
+
+        var onRequestChange = function () {
+            if ((request.readyState == 4) && (request.status == 200)) {
+                var data = JSON.parse(request.responseText);
+                draw(data);
+            }
+        };
+
+        var grabData = function () {
+            request.onreadystatechange = onRequestChange;
+            request.open("GET", "/Hydra/data_grab/", true);
+            request.send();
+        };
+
+        function resume() {
             window.st = setTimeout(grabData, 1000);
         }
-    };
 
-
-    var onRequestChange = function () {
-        if ((request.readyState == 4) && (request.status == 200)) {
-            var data = JSON.parse(request.responseText);
-            draw(data);
+        grabData();
+        function pause() {
+            clearTimeout(window.st);
         }
-    };
 
-    var grabData = function () {
-        request.onreadystatechange = onRequestChange;
-        request.open("GET", "/Hydra/data_grab/", true);
-        request.send();
-    };
-
-    function resume() {
-        window.st = setTimeout(grabData, 1000);
-    }
-
-    grabData();
-    function pause() {
-        clearTimeout(window.st);
-    }
-    $("#menuBar>li span").click(function () {
-        $(this).siblings().toggle('slow');
-        pause();
-    });
-    function closeForm() {
-        var parent = $(event.target);
-        var closest = parent.closest('article');
-        $(closest).hide('slow');
-        resume();
-    }
+        $("#menuBar>li span").click(function () {
+            $(this).siblings().toggle('slow');
+            pause();
+        });
+        function closeForm() {
+            var parent = $(event.target);
+            var closest = parent.closest('article');
+            $(closest).hide('slow');
+            resume();
+        }
 </script>
 </body>
 </html>

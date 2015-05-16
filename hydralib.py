@@ -10,6 +10,7 @@ from django.http import HttpResponse
 from Hydra.models import Plot, Reservoir, AlertPlot, AlertRes, PlotHistory, ResHistory
 from datetime import datetime
 import smtplib, time
+from django.contrib.auth.models import User
 
 SERVER = smtplib.SMTP("smtp.gmail.com", 587)
 
@@ -111,31 +112,55 @@ def create_alert_object(obj_type, obj_id):
             r.save()
 
 
+# makes history objects
 def make_history(**kwargs):
     obj_type = kwargs.pop('obj_type', None)
     obj_id = kwargs.pop('obj_id', None)
     data_type = kwargs.pop('data_type', None)
-    date = str(datetime.now().date())
+    user_id = kwargs.pop('user', None)
+    date = datetime.now().date()
+    if obj_type in ('plot', None):
+        plot_list = get_history('plot', obj_id, user_id)
+        for plot in plot_list:
+            p = PlotHistory(date=date)
+            p.plot = plot
+            if data_type in ('light_status', None):
+                p.light_status = plot.light_status
+                p.save()
+            if data_type in ('temp', None):
+                p.temp = plot.current_temp
+                p.save()
+            if data_type in ('humid', None):
+                p.humid = plot.current_humid
+                p.save()
+    if obj_type in ('res', None):
+        res_list = get_history('res', obj_id, user_id)
+        for res in res_list:
+            r = ResHistory(date=date)
+            print(res)
+            r.res = res
+            if data_type == 'ph' or data_type is None:
+                r.ph = res.current_ph
+                r.save()
+            if data_type == 'ppm' or data_type is None:
+                r.ppm = res.current_ppm
+                r.save()
+
+
+# gets objects for making history used in make_history
+def get_history(obj_type, obj_id, user_id):
     if obj_type == 'plot':
-        p = PlotHistory(date=date)
-        p.plot = Plot.objects.get(pk=obj_id)
-        p.save()
-        if data_type == 'light_status' or data_type is None:
-            p.light_status = Plot.objects.get(pk=obj_id).light_status
-            p.save()
-        if data_type == 'temp' or data_type is None:
-            p.temp = Plot.objects.get(pk=obj_id).current_temp
-            p.save()
-        if data_type == 'humid' or data_type is None:
-            p.humid = Plot.objects.get(pk=obj_id).current_humid
-            p.save()
-    if obj_type == 'res':
-        r = ResHistory(date=date)
-        r.res = Reservoir.objects.get(pk=obj_id)
-        r.save()
-        if data_type == 'ph' or data_type is None:
-            r.ph = Reservoir.objects.get(pk=obj_id).current_ph
-            r.save()
-        if data_type == 'ppm' or data_type is None:
-            r.ppm = Reservoir.objects.get(pk=obj_id).current_ppm
-            r.save()
+        if obj_id is None:
+            return Plot.objects.filter(user__id=user_id)
+        else:
+            plot_list = []
+            plot_list.append(Plot.objects.get(pk=obj_id))
+            return plot_list
+    elif obj_type == 'res':
+        if obj_id is None:
+            print(Reservoir.objects.filter(user__id=user_id))
+            return Reservoir.objects.filter(user__id=user_id)
+        else:
+            res_list = []
+            res_list.append(Reservoir.objects.get(pk=obj_id))
+            return res_list

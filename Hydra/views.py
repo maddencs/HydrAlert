@@ -78,7 +78,7 @@ def data_grab(request):
                         content_type='application/json')
 
 
-def plot_history(request, plot_id):
+def plot_history_data(request, plot_id):
     history_plots = PlotHistory.objects.filter(plot=plot_id)
     history = []
     for p in history_plots:
@@ -86,7 +86,7 @@ def plot_history(request, plot_id):
     return HttpResponse(json.dumps({'plot_list': history}, indent=4), content_type='application/json')
 
 
-def res_history(request, res_id):
+def res_history_data(request, res_id):
     history_res = ResHistory.objects.filter(res=res_id)
     res_list = []
     for r in history_res:
@@ -115,6 +115,7 @@ def add_plot(request):
         p.light_stop = request.POST['light_stop']
         p.goal_temp = request.POST['goal_temp']
         p.goal_humid = request.POST['goal_humid']
+        p.user__id = request.user
         p.save()
         return HttpResponse()
 
@@ -122,28 +123,29 @@ def add_plot(request):
 @login_required(login_url='/Hydra/login/')
 def add_res(request):
     if request.method == 'POST':
-        r = Reservoir()
-        r.plot = Plot.objects.get(pk=request.POST['plot'])
+        r = Reservoir(plot=Plot.objects.get(pk=request.POST['plot']))
+        r.save()
         r.goal_ph_high = request.POST['goal_ph_high']
         r.goal_ph_low = request.POST['goal_ph_low']
         r.goal_ppm = request.POST['goal_ppm']
+        r.user.add(request.user)
         r.save()
         return HttpResponse()
 
 @login_required(login_url='/Hydra/login/')
 def delete_plot(request, plot_id):
     p = Plot.objects.filter(id=plot_id)
-    res_lst = Reservoir.objects.filter(plot=p)
+    res_list = Reservoir.objects.filter(plot=p)
     p.delete()
-    for res in res_lst:
+    for res in res_list:
         res.delete()
-    return redirect('plots')
+    return HttpResponse()
 
 @login_required(login_url='/Hydra/login/')
 def delete_res(request, res_id):
     r = Reservoir.objects.get(id=res_id)
     r.delete()
-    return redirect('plots')
+    return HttpResponse()
 
 @login_required(login_url='/Hydra/login/')
 def add_sensor(request, res_id):
@@ -208,3 +210,7 @@ def modify_plot(request, plot_id):
         p.temp_tolerance = request.POST['temp_tolerance']
         p.humid_tolerance = request.POST['humid_tolerance']
         return HttpResponse()
+
+
+def plot_graph(request, plot_id):
+    return render(request, 'Hydra/graph_page.html', {'plot_id': plot_id})

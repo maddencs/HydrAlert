@@ -24,7 +24,4 @@ def loop():
 
 
 if __name__ == '__main__':
-    for plot in Plot.objects.all():
-        make_history(obj_type='plot', obj_id=plot.id)
-    for r in Reservoir.objects.all():
-        make_history(obj_type='res', obj_id=r.id)
+    make_history(user=1)

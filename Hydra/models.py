@@ -36,6 +36,7 @@ class Plot(models.Model):
 
 class Reservoir(models.Model):
     plot = models.ForeignKey(Plot)
+    user = models.ManyToManyField(User)
     reservoir_comments = models.CharField(blank=True, max_length=300)
     current_ph = models.FloatField(default=0)
     current_ppm = models.IntegerField(default=0)
