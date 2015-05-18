@@ -176,11 +176,13 @@
                 var redLight = document.createElement("img");
                 var yellowLight = document.createElement("img");
                 var plotLILights = document.createElement("span");
+                var plotLITemp = document.createElement("span");
                 var plotDetails = document.createElement("div");
                 var plotOption = document.createElement("option");
                 var delPlot = document.createElement("a");
                 var br = document.createElement("br");
                 var brCln = br.cloneNode(true);
+                plotLITemp.innerHTML = "Current Temperature: " + plot.current_temp;
                 plotResUL.classList.add('col-md-5');
                 delPlot.innerHTML = "Delete this plot";
                 delPlot.setAttribute("plot_id", plot.id);
@@ -220,14 +222,15 @@
                     modPlotForm.setAttribute("action", plotSubmit);
                     $('#modPlotArt').toggle('slow');
                 });
-                plotUrl.innerHTML = "Plot ID: " + plotPersonalID;
+                plotUrl.innerHTML = "Plot ID: " + plotPersonalID + "<br>";
                 plotElement.appendChild(plotDetails);
                 plotDetails.appendChild(plotUrl);
-                plotDetails.appendChild(brCln);
                 plotDetails.appendChild(delPlot);
                 var anotherBr = document.createElement("br");
                 plotDetails.appendChild(anotherBr);
                 plotDetails.appendChild(plotLILights);
+                plotDetails.appendChild(brCln);
+                plotDetails.appendChild(plotLITemp);
                 plotDetails.appendChild(plotResUL);
                 plotResUL.classList.add('list-unstyled');
                 if (plot.light_status == true) {
@@ -289,6 +292,7 @@
                         stat_pH.appendChild(curpH);
                         resLIPPM.innerHTML = "Current PPM: ";
                         stat_ppm.innerHTML = res.current_ppm;
+                        plotResUL.appendChild(brCln);
                         plotResUL.appendChild(resUrl);
                         plotResUL.appendChild(delRes);
                         plotResUL.appendChild(resUL);

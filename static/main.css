@@ -184,6 +184,7 @@ ul dt a {
 
 input {
     width: auto;
+    margin: 1em;
 }
 
 #menuBar article {
@@ -213,6 +214,7 @@ article form{
     align-content: center;
     position: relative;
     z-index: 100;
+    margin: 1em;
 }
 
 li>span{
@@ -240,4 +242,9 @@ a:link {
 a:visited{
     color: black;
     text-decoration: none;
+}
+
+article a {
+    text-decoration: none;
+    color: black;
 }

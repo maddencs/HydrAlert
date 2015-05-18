@@ -1,22 +1,21 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django import forms
-
-SENSOR_CHOICES = [('ppm', 'PPM Sensor'), ('pH', 'pH Sensor'), ('temp', 'Temp/Humid Sensor'), ('light', 'Light Sensor'), ]
+SENSOR_CHOICES = [('ppm', 'PPM Sensor'), ('pH', 'pH Sensor'),
+                  ('temp', 'Temp/Humid Sensor'), ('light', 'Light Sensor'), ]
 
 
 class Plot(models.Model):
     user = models.ManyToManyField(User)
-    name = models.CharField(max_length=40, blank=True)
+    name = models.CharField( max_length=40, blank=True)
     plot_comments = models.CharField(max_length=500, blank=True)
-    current_temp = models.IntegerField(default=0)
-    current_humid = models.IntegerField(default=0)
+    current_temp = models.IntegerField(default=None, blank=True, null=True)
+    current_humid = models.IntegerField(default=None, blank=True, null=True)
     light_start = models.TimeField(blank=True, null=True)
     light_stop = models.TimeField(blank=True, null=True)
     light_status = models.NullBooleanField(blank=True, null=True)
-    goal_temp = models.IntegerField(default=0)
+    goal_temp = models.IntegerField(default=None, blank=True, null=True)
     temp_tolerance = models.IntegerField(default=5)
-    goal_humid = models.IntegerField(default=0)
+    goal_humid = models.IntegerField(default=None, blank=True, null=True)
     humid_tolerance = models.IntegerField(default=5)
     humid_alert = models.NullBooleanField(default=False)
     temp_alert = models.NullBooleanField(default=False)
@@ -38,12 +37,12 @@ class Reservoir(models.Model):
     plot = models.ForeignKey(Plot)
     user = models.ManyToManyField(User)
     reservoir_comments = models.CharField(blank=True, max_length=300)
-    current_ph = models.FloatField(default=0)
-    current_ppm = models.IntegerField(default=0)
+    current_ph = models.FloatField(default=None, null=True, blank=True)
+    current_ppm = models.IntegerField(default=None, null=True, blank=True)
     res_change_date = models.DateField(default=None, null=True, blank=True)
-    goal_ph_low = models.FloatField(default=5.5)
-    goal_ph_high = models.FloatField(default=6.5)
-    goal_ppm = models.IntegerField(default=0)
+    goal_ph_low = models.FloatField(default=None, blank=True, null=True)
+    goal_ph_high = models.FloatField(default=None, blank=True, null=True)
+    goal_ppm = models.IntegerField(default=None, null=True, blank=True)
     ppm_tolerance = models.IntegerField(default=0)
     ph_alert = models.NullBooleanField(default=False)
     ppm_alert = models.NullBooleanField(default=False)

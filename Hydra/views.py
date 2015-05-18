@@ -3,6 +3,7 @@ from .models import Reservoir, Plot, Sensors, AlertPlot, AlertRes, PlotHistory, 
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
+from django.views.decorators.csrf import csrf_exempt
 import json
 
 
@@ -215,3 +216,23 @@ def modify_plot(request, plot_id):
 
 def plot_graph(request, plot_id):
     return render(request, 'Hydra/graph_page.html', {'plot_id': plot_id})
+
+
+@csrf_exempt
+def update_plot(request):
+    if request.method == 'POST':
+        p = get_object_or_404(Plot, pk=request.POST['id'])
+        p.current_temp = request.POST['temp']
+        p.current_humid = request.POST['humid']
+        p.light_status = request.POST['lights']
+        p.save()
+        return HttpResponse()
+
+@csrf_exempt
+def update_res(request):
+    if request.method == 'POST':
+        r = get_object_or_404(Reservoir, pk=request.POST['id'])
+        r.current_ph = request.POST['ph']
+        r.current_ppm = request.POST['ppm']
+        r.save()
+        return HttpResponse()

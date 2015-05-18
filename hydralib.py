@@ -9,10 +9,10 @@ django.setup()
 from django.http import HttpResponse
 from Hydra.models import Plot, Reservoir, AlertPlot, AlertRes, PlotHistory, ResHistory
 from datetime import datetime
-import smtplib, time
+import smtplib
 from django.contrib.auth.models import User
 
-SERVER = smtplib.SMTP("smtp.gmail.com", 587)
+# SERVER = smtplib.SMTP("smtp.gmail.com", 587)
 
 
 # checks if current is within the fail limit of the goal. multiplies inputs by 10 for pH
