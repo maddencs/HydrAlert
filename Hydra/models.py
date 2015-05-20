@@ -97,16 +97,20 @@ class AlertEmail(models.Model):
 
 class AlertPlot(models.Model):
     user = models.ForeignKey(User, null=True, blank=True)
-    plot_id = models.IntegerField(default=None, null=True, blank=True)
+    plot = models.ForeignKey(Plot)
     lights = models.NullBooleanField(null=True, blank=True)
     temp = models.IntegerField(default=None, null=True, blank=True)
     humid = models.IntegerField(default=None, null=True, blank=True)
+    date = models.DateField(blank=True, null=True)
+    time = models.TimeField(default=None, null=True, blank=True)
 
 
 class AlertRes(models.Model):
     res = models.ForeignKey(Reservoir, null=True, blank=True)
+    date = models.DateField(blank=True, null=True)
     ph = models.FloatField(default=None, null=True, blank=True)
     ppm = models.IntegerField(default=0, null=True, blank=True)
+    time = models.TimeField(default=None, null=True, blank=True)
 
 
 class PlotHistory(models.Model):
@@ -115,6 +119,7 @@ class PlotHistory(models.Model):
     light_status = models.NullBooleanField()
     temp = models.IntegerField(default=None, null=True, blank=True)
     humid = models.IntegerField(default=None,  null=True, blank=True)
+    time = models.TimeField(default=None, null=True, blank=True)
 
 
 class ResHistory(models.Model):

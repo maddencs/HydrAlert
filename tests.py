@@ -8,7 +8,7 @@ django.setup()
 
 from django.contrib.auth.models import User
 from Hydra.models import Plot, Reservoir
-from hydralib import create_alert_object, make_history
+from hydralib import create_alert_object, make_history, make_alert
 import requests
 import random
 
@@ -26,7 +26,6 @@ def loop():
 # Sends POST requests as actual objects would in order to update the db
 def change_stats():
     while True:
-        print("Work, dammit")
         try:
             for plot in Plot.objects.all():
                 light_bool = random.randint(0, 100)
@@ -34,24 +33,21 @@ def change_stats():
                     light_status = False
                 else:
                     light_status = True
-                temp = random.randint(plot.current_temp-plot.temp_tolerance, plot.current_temp+plot.temp_tolerance)
-                humid = random.randint(plot.current_humid-plot.humid_tolerance, plot.current_humid+plot.humid_tolerance)
+                temp = random.randint(plot.goal_temp-plot.temp_tolerance, plot.goal_temp+plot.temp_tolerance)
+                humid = random.randint(plot.goal_humid-plot.humid_tolerance, plot.goal_humid+plot.humid_tolerance)
                 params = {'id': plot.id, 'temp': temp, 'humid': humid, 'lights': light_status, }
                 print(light_status, light_bool)
-                print("Plot ID: ", plot.id)
-                pr = requests.post("http://localhost:8000/Hydra/update/plot/", data=params)
+                pr = requests.post("http://52.11.95.35/Hydra/update/plot/", data=params)
                 # pr.prepare()
-                print(pr.text)
         except TypeError:
             pass
         try:
             for res in Reservoir.objects.all():
                 ph = '%.1f'%(random.uniform(res.goal_ph_low-1, res.goal_ph_high+1))
                 ppm = random.randint(res.goal_ppm-50, res.goal_ppm+50)
-                print(ppm)
                 print("Reservoir: ", res.id)
                 params2 = {'id': res.id, 'ph': ph, 'ppm': ppm, }
-                rr = requests.post("http://localhost:8000/Hydra/update/reservoir/", data=params2)
+                rr = requests.post("http://52.11.95.35//Hydra/update/reservoir/", data=params2)
                 # rr.prepare()
                 print(rr)
         except TypeError:

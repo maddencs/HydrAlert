@@ -8,11 +8,11 @@ django.setup()
 
 from django.http import HttpResponse
 from Hydra.models import Plot, Reservoir, AlertPlot, AlertRes, PlotHistory, ResHistory
-from datetime import datetime
+from datetime import datetime, date
 import smtplib
 from django.contrib.auth.models import User
 
-# SERVER = smtplib.SMTP("smtp.gmail.com", 587)
+SERVER = smtplib.SMTP("smtp.gmail.com", 587)
 
 
 # checks if current is within the fail limit of the goal. multiplies inputs by 10 for pH
@@ -164,3 +164,39 @@ def get_history(obj_type, obj_id, user_id):
             res_list = []
             res_list.append(Reservoir.objects.get(pk=obj_id))
             return res_list
+
+
+def make_alert(obj, property, value):
+    # check obj's property 3 times with 5 minute intervals
+    # if the alert object doesn't exist for this already then
+    # create the alert object
+    if property == 'ph':
+        ar = AlertRes.objects.get_or_create(res=obj)[0]
+        ar.ph = value
+        ar.date = date.today()
+        ar.time = datetime.now()
+        ar.save()
+    elif property == 'ppm':
+        ar = AlertRes.objects.get_or_create(res=obj)[0]
+        ar.ppm = value
+        ar.date = date.today()
+        ar.time = datetime.now()
+        ar.save()
+    elif property == 'lights':
+        ap = AlertPlot.objects.get_or_create(plot=obj)[0]
+        ap.lights = value
+        ap.date = date.today()
+        ap.time = datetime.now()
+        ap.save()
+    elif property == 'temp':
+        ap = AlertPlot.objects.get_or_create(plot=obj)[0]
+        ap.date = date.today()
+        ap.time = datetime.now()
+        ap.temp = value
+        ap.save()
+    elif property == 'humid':
+        ap = AlertPlot.objects.get_or_create(plot=obj)[0]
+        ap.date = date.today()
+        ap.time = datetime.now()
+        ap.humid = value
+        ap.save()

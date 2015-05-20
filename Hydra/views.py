@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
-import json
+import json, ast
 
 
 def register(request):
@@ -69,11 +69,13 @@ def data_grab(request):
                                'light_stop': str(plot.light_stop), 'current_temp': plot.current_temp,
                                'current_humid': plot.current_humid, 'goal_temp': plot.goal_temp,
                                'goal_humid': plot.goal_humid, 'light_status': plot.light_status,
-                               'alert_status': plot.alert_status, })
+                               'alert_status': plot.alert_status, 'humid_tol': plot.humid_tolerance,
+                               'temp_tol': plot.temp_tolerance, })
         for res in plot.reservoir_set.all():
             grab_res_list.append({'id': res.id, 'plot': res.plot_id, 'current_ph': res.current_ph,
                                   'current_ppm': res.current_ppm, 'goal_ph_low': res.goal_ph_low,
-                                  'goal_ph_high': res.goal_ph_high, 'alert_status': res.alert_status, })
+                                  'goal_ph_high': res.goal_ph_high, 'alert_status': res.alert_status,
+                                  'reservoir_comments': res.reservoir_comments, 'ppm_tolerance': res.ppm_tolerance, })
 
     return HttpResponse(json.dumps({'plot_list': grab_plot_list, 'res_list': grab_res_list}, indent=4),
                         content_type='application/json')
@@ -189,12 +191,24 @@ def modify_res(request, res_id):
         r = None
 
     if request.method == 'POST':
-        r.goal_ph_high = request.POST['goal_ph_high']
-        r.goal_ph_low = request.POST['goal_ph_low']
-        r.goal_ppm = request.POST['goal_ppm']
-        r.ppm_tolerance = request.POST['ppm_tolerance']
+        if request.POST['goal_ph_high'] != '':
+            r.goal_ph_high = ast.literal_eval(request.POST['goal_ph_high'])
+        else:
+            pass
+        if request.POST['goal_ph_low'] != '':
+            r.goal_ph_low = ast.literal_eval(request.POST['goal_ph_low'])
+        else:
+            pass
+        if request.POST['goal_ppm'] != '':
+            r.goal_ppm = ast.literal_eval(request.POST['goal_ppm'])
+        else:
+            pass
+        if request.POST['ppm_tolerance'] != '':
+            r.ppm_tolerance = ast.literal_eval(request.POST['ppm_tolerance'])
+        else:
+            pass
         r.save()
-        return HttpResponse()
+    return HttpResponse()
 
 
 @login_required(login_url='/Hydra/login/')
@@ -224,7 +238,12 @@ def update_plot(request):
         p = get_object_or_404(Plot, pk=request.POST['id'])
         p.current_temp = request.POST['temp']
         p.current_humid = request.POST['humid']
-        p.light_status = request.POST['lights']
+        if request.POST['lights'] == 'True':
+            p.light_status = True
+        else:
+            p.light_status = False
+        print(request.POST['lights'])
+        print(p.light_status)
         p.save()
         return HttpResponse()
 
