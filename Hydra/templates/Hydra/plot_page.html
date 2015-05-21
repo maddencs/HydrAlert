@@ -11,8 +11,10 @@
     <script>
 
     </script>
+    <link rel="icon"
+      type="image/png"
+      href='{% static 'favicon.ico' %}'>
     <link href='http://fonts.googleapis.com/css?family=Bilbo+Swash+Caps' rel='stylesheet' type='text/css'>
-
 </head>
 
 <div class="contextMenu list-unstyled" id="resRightClickMenu">
@@ -21,11 +23,20 @@
         {# Insert reservoir personal id here #}
         <li id="deleteRes">Delete Reservoir: <span class="rightClickResID"></span></li>
         {# ^Same here #}
-        <li id="moveRes">*Move Reservoir: <span class="rightClickResID"></span></li>
+        <li id="moveRes">Move Reservoir: <span class="rightClickResID"></span>
+
+            <div id="rightCaret"></div>
+        </li>
         <li class="newRes">New Reservoir</li>
         <li class="newPlot">New Plot</li>
+
     </ul>
+    <div id="moveResList">
+        <ul>
+        </ul>
+    </div>
 </div>
+
 
 <div class="contextMenu list-unstyled" id="plotRightClickMenu">
     <ul>
@@ -82,7 +93,7 @@
                 </form>
             </article>
 
-            <li id="addPlot"><span>Add Plot</span>
+            <li id="addPlot"><span>New Plot</span>
                 <br>
                 <article class="col-md-3 plotShape" id="addPlotDiv">
                     <a id="closeButton" onclick="closeForm()">X</a>
@@ -102,7 +113,7 @@
                 </article>
             </li>
 
-            <li class="form" id="addReservoir"><span>Add Reservoir</span>
+            <li class="form" id="addReservoir"><span>New Reservoir</span>
                 <br>
                 <article id="addResDiv" class="plotShape form">
                     <a id="closeButton" onclick="closeForm()">X</a>
@@ -126,7 +137,7 @@
 
             <li id="logOut"><a href="/Hydra/logout/">Logout</a></li>
 
-            <li id="logIn"><span>Log In</span>
+            <li id="logIn"><span>Switch User</span>
                 <br>
                 <article id="logInDiv" class="plotShape">
                     <a id="closeButton" onclick="closeForm()">X</a>
@@ -185,7 +196,7 @@
         var plotDropDown = document.getElementById('plotDropDown');
         plotDropDown.innerHTML = "";
         document.getElementById('plotDiv').innerHTML = "";
-
+        $('#moveResList>ul').html('');
         for (var p = 0; p < data['plot_list'].length; p++) {
             var plot = data['plot_list'][p];
             var plotElement = document.createElement("article");
@@ -203,6 +214,11 @@
             var delPlot = document.createElement("a");
             var br = document.createElement("br");
             var brCln = br.cloneNode(true);
+            var moveResPlotLI = document.createElement("li");
+            moveResPlotLI.setAttribute("plotRealID", plot.id);
+            moveResPlotLI.innerHTML = "Plot: " + plotPersonalID;
+            var moveResList = $('#moveResList>ul');
+            moveResList.append(moveResPlotLI);
             plotDetails.setAttribute("plot_id", plotPersonalID);
             plotDetails.setAttribute("plotRealID", plot.id);
             plotDetails.setAttribute("light_start", plot.light_start);
@@ -240,7 +256,7 @@
                 $('#modPlotArt').toggle('slow');
             });
 
-            plotUrl.innerHTML = "Plot ID: " + plotPersonalID + "<br>";
+            plotUrl.innerHTML = '<img src="{% static 'icons_greenhouse.png' %}" width="20px" height="20px">' + "Plot ID: " + plotPersonalID + "<br>";
             var plotDetailsDiv = document.createElement("div");
             plotElement.appendChild(plotDetailsDiv);
             plotDetails.appendChild(plotUrl);
@@ -250,6 +266,7 @@
             plotDetails.appendChild(anotherBr);
             plotDetails.appendChild(plotLILights);
             plotDetails.appendChild(brCln);
+            {# Append light status if light status isn't null #}
             if (plot.current_temp != null) {
                 plotDetails.appendChild(plotLITemp);
             }
@@ -303,7 +320,7 @@
                     });
 
                     delRes.id = res.id;
-                    resATag.innerHTML = "<br>Reservoir ID: " + resPersonalID;
+                    resATag.innerHTML = '<br>' + '<img src="{% static 'icons_reservoir.png' %}" width="20px" height="20px">' + "Reservoir ID: " + resPersonalID;
                     resUrl.appendChild(resATag);
                     delRes.setAttribute("res_id", res.id);
 
@@ -357,13 +374,13 @@
                     resListItem.setAttribute("title", res.reservoir_comments);
 
                     if (res.current_ph < res.goal_ph_low) {
-                        stat_pH.classList.add('phBad');
+                        stat_pH.id = 'phBad';
                         var dnArrow = document.createElement("span");
                         dnArrow.innerHTML = "&darr;";
                         stat_pH.style.fontWeight = "bold";
                         stat_pH.insertBefore(dnArrow, curpH);
                     } else if (res.current_ph > res.goal_ph_high) {
-                        stat_pH.classList.add('phBad');
+                        stat_pH.id = 'phBad';
                         var upArrow = document.createElement("span");
                         upArrow.innerHTML = "&uarr;";
                         stat_pH.style.fontWeight = "bold";
@@ -437,12 +454,25 @@
             resume();
         });
         {# Open forms from context menu clicks #}
-        $(".newPlot").click(function(){
+        $(".newPlot").click(function () {
             $("#addPlotDiv").toggle('slow');
         });
-        $(".newRes").click(function(){
+        $(".newRes").click(function (e) {
+            $('#plotDropDown').selected = e.target.closest('div').getAttribute('plotRealD');
             $("#addResDiv").toggle('slow');
         });
+        $('#moveRes').click(function () {
+            pause();
+            var p = document.getElementById("moveRes");
+            var l = document.getElementById("moveResList");
+            var pos = $("#moveRes");
+            pos = pos.offset();
+            console.log(pos.left, p.offsetWidth);
+            l.style.left = (pos.left + p.offsetWidth) + "px";
+            l.style.top = pos.top + "px";
+            $('#moveResList').toggle('fast');
+        });
+
         {# Function to bring up custom menu on right click #}
         window.oncontextmenu = function (event) {
             pause();
@@ -451,16 +481,46 @@
             var pdiv = document.getElementById("plotRightClickMenu");
             var rdiv = document.getElementById("resRightClickMenu");
 
+
             if (event.target.closest('div').id == 'resDetails') {
+                {# Right click when over reservoir details #}
                 var infoLI = event.target.closest('div');
                 $('.rightClickResID').html(infoLI.getAttribute("res_id"));
                 rdiv.style.left = left;
                 rdiv.style.top = top;
                 $(rdiv).toggle();
                 $(pdiv).hide();
+                var modRes = document.getElementById("modifyRes");
+                modRes.addEventListener("click", function () {
+                    pause();
+                    console.log("infoli", infoLI);
+                    document.getElementById("goal_ph_low").value = infoLI.getAttribute("goal_ph_low");
+                    document.getElementById("goal_ph_high").value = infoLI.getAttribute("goal_ph_high");
+                    document.getElementById("goal_ppm").value = infoLI.getAttribute("goal_ppm");
+                    document.getElementById("ppm_tolerance").value = infoLI.getAttribute("ppm_tolerance");
+                    document.getElementById("modResForm").setAttribute("action", "/Hydra/modify/reservoir/" + infoLI.getAttribute("resRealID") + "/");
+                    $('#modResArt').toggle('fast');
+                });
+                {#                $('#modifyRes').click(function (infoLI) {#}
+                {#                    #}
+                {#                });#}
                 var delRes = document.getElementById("deleteRes");
-                delRes.addEventListener("click", function(){
+                delRes.addEventListener("click", function () {
                     delResFunc(infoLI.getAttribute("resRealID"));
+                });
+                var moveResPlot = $('#moveResList>ul>li');
+                moveResPlot.click(function (e) {
+                    pause();
+                    var plot = e.target.getAttribute("plotRealID");
+                    if (confirm('Are you sure you wish to move this to plot' + e.target.innerHTML + '?')) {
+                        $.ajax("/Hydra/move/reservoir/" + infoLI.getAttribute("resRealID") + "/" + plot + "/")
+                                .done(function () {
+                                    resume();
+                                })
+                                .fail(function () {
+                                    resume();
+                                })
+                    }
                 })
             } else if (event.target.closest('div').id == 'plotDetails') {
 
@@ -469,6 +529,7 @@
                 $('.rightClickPlotID').html(plotStats.getAttribute("plot_id"));
                 var modPlot = document.getElementById("modifyPlot");
                 modPlot.addEventListener("click", function () { {# Setting attributes to prepopulate modify plot form #}
+                    pause();
                     document.getElementById("light_start").value = plotStats.getAttribute("light_start");
                     document.getElementById("light_stop").value = plotStats.getAttribute("light_stop");
                     document.getElementById("goal_humid").value = plotStats.getAttribute("goal_humid");
@@ -484,63 +545,73 @@
                 {# Calls function to delete plot prevents repeated popups #}
                 var delPlot = document.getElementById("deletePlot");
                 delPlot.addEventListener("click", function () {
+                    pause();
                     delPlotFunc(plotStats);
                 });
 
+                pdiv.style.left = left;
+                pdiv.style.top = top;
+                $(pdiv).toggle();
+                $(rdiv).hide();
+            }
+            else {
+                {# load background click menu #}
+            }
+            return false;
+        };
 
-            pdiv.style.left = left;
-            pdiv.style.top = top;
-            $(pdiv).toggle();
-            $(rdiv).hide();
-        }
-        else
-        {
-            {# load background click menu #}
-        }
-        return false;
-    };
+
+        {# Hide context menu divs #}
+        window.addEventListener("click", function (e) {
+            var pdiv = document.getElementById("plotRightClickMenu");
+            var rdiv = document.getElementById("resRightClickMenu");
+            if (e.target.id != "moveRes") {
+                console.log(e.target.id);
+                $(rdiv).hide();
+                $(pdiv).hide();
+            }
+            if ((e.target.id != "moveResList") && (e.target.id != "moveRes")) {
+                console.log(e.target.id);
+                $("#moveResList").hide();
+            }
+            {# Stopping data refresh when clicking inside a form #}
+            if (e.target.closest('article').classList.contains('form')) {
+                pause();
+            } else {
+                resume();
+            }
+        })
+    })
+    ;
 
     var delPlotFunc = function (plotStats) {
+        pause();
         if (confirm("Are you sure you wish to delete this plot?")) {
             $.ajax("/Hydra/delete/plot/" + plotStats.getAttribute("plotRealID"))
                     .done(function () {
                         alert("Plot deleted!");
+                        resume();
                     })
                     .fail(function () {
                         alert("Plot could not be deleted...");
+                        resume();
                     });
         }
     };
 
     var delResFunc = function (res_id) {
-        if(confirm("Are you sure you wish to delete this reservoir?")) {
-            $.ajax("/Hydra/delete/reservoir/" + res_id +"/")
-                    .done(function(){
+        pause();
+        if (confirm("Are you sure you wish to delete this reservoir?")) {
+            $.ajax("/Hydra/delete/reservoir/" + res_id + "/")
+                    .done(function () {
                         alert("Reservoir deleted!");
                         resume();
                     })
-                    .fail(function(){
+                    .fail(function () {
                         alert("Reservoir couldn't be deleted...");
                         resume();
                     })
         }
     };
-
-    {# Hide context menu divs #}
-    window.addEventListener("click", function (e) {
-        var pdiv = document.getElementById("plotRightClickMenu");
-        var rdiv = document.getElementById("resRightClickMenu");
-        $(rdiv).hide();
-        $(pdiv).hide();
-        {# Stopping data refresh when clicking inside a form #}
-        if(e.target.closest('article').classList.contains('form')){
-            pause();
-        } else {
-            resume();
-        }
-    })
-    })
-    ;
-
 </script>
 </html>

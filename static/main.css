@@ -15,7 +15,6 @@ html, body {
     height: 40%;
     text-align: right;
     display: block;
-    /*padding: 1em;*/
     margin: 1em;
 }
 
@@ -110,7 +109,7 @@ ul dt a {
 #menuBar {
     float: left;
     position: fixed;
-    margin-top: 1em;
+    margin: 0;
     width: auto;
     z-index: 3;
 }
@@ -123,17 +122,13 @@ ul dt a {
     text-align: center;
     /*background: black;*/
     /*border-radius: 3px;*/
-    /*margin: 10px;*/
     position: relative;
-    padding: 1em;
+    margin: 0;
+    padding: 3px;
     font-weight: bold;
     cursor: default;
     user-select: none;
 }
-
-/*#menuBar li:nth-child(n) {*/
-/*clear: both;*/
-/*}*/
 
 .resAlert {
     background-color: yellow;
@@ -183,7 +178,7 @@ ul dt a {
     padding: 1em;
 }
 
-.phBad {
+#phBad {
     color: red;
     text-shadow: 2px 2px 2px black;
 }
@@ -211,6 +206,10 @@ article form {
     position: relative;
     z-index: 100;
     margin: 1em;
+    color: black;
+}
+
+select {
     color: black;
 }
 
@@ -279,10 +278,13 @@ dt {
     border-radius: 3px;
     z-index: 100;
     color: white;
+    margin: 0;
 }
 
 #resRightClickMenu li {
     list-style-type: none;
+    margin: 0;
+    padding: 0;
 }
 
 #plotRightClickMenu li {
@@ -297,14 +299,22 @@ dt {
     text-align: right;
 }
 
-.contextMenu li:hover {
+.contextMenu li:hover,
+.contextMenu li:hover span{
     background-color: beige;
     color: black;
     cursor: default;
     user-select: none;
-    text-shadow: 2px 2px 2px white;
+    text-shadow: none;
     padding: 0;
     margin: 0;
+
+}
+
+.contextMenu li:hover #rightCaret{
+    border-left: 4px solid black;
+    border-top: 4px solid transparent;
+	border-bottom: 4px solid transparent;
 }
 
 .contextMenu ul {
@@ -312,4 +322,31 @@ dt {
     margin: 0;
     width: auto;
     text-shadow: 2px 2px 2px black;
+}
+
+#moveResList {
+    display: none;
+    position: fixed;
+    margin: 0;
+    background-color: #3E4040;
+    border-radius: 3px;
+    z-index: 100;
+    color: white;
+    list-style-type: none;
+}
+
+#rightCaret {
+    width: 0;
+	height: 0;
+	border-top: 4px solid transparent;
+	border-bottom: 4px solid transparent;
+	border-left: 4px solid white;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+}
+
+#rightCaret:hover{
+    border-color: black;
 }

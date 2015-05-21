@@ -43,14 +43,15 @@ def change_stats():
             pass
         try:
             # for res in Reservoir.objects.all():
-            i = 0;
-            while i < 6:
+            i = 0
+            while i < 10:
                 ph = '%.1f'%(random.uniform(4, 8))
                 ppm = random.randint(800, 1000)
                 params2 = {'id': i, 'ph': ph, 'ppm': ppm, }
                 rr = requests.post("http://52.11.95.35//Hydra/update/reservoir/", data=params2)
                 # rr.prepare()
                 print(rr)
+                i += 1
         except TypeError:
             pass
 

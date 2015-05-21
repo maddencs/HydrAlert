@@ -30,7 +30,8 @@ urlpatterns = patterns('',
                        url(r'^add/reservoir/$', views.add_res, name='add_res'),
                        url(r'^add_sensor/$', views.add_sensor, name='add_sensor'),
 
-                       # URL's for receiving statistic updates
+                       # URL's for updating plots and reservoirs
                        url(r'^update/plot/$', views.update_plot, name='update_plot'),
                        url(r'^update/reservoir/$', views.update_res, name='update_res'),
+                       url(r'^move/reservoir/(?P<res_id>[0-9]+)/(?P<plot_id>[0-9]+)/$', views.move_res, name='move_res'),
                        )

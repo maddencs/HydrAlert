@@ -255,3 +255,12 @@ def update_res(request):
         r.current_ppm = request.POST['ppm']
         r.save()
         return HttpResponse()
+
+@csrf_exempt
+@login_required(login_url='/Hydra/login/')
+def move_res(request, res_id, plot_id):
+    # if request.method == 'POST':
+    r = get_object_or_404(Reservoir, pk=res_id)
+    r.plot = get_object_or_404(Plot, pk=plot_id)
+    r.save()
+    return HttpResponse()
