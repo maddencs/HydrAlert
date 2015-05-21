@@ -42,11 +42,12 @@ def change_stats():
         except TypeError:
             pass
         try:
-            for res in Reservoir.objects.all():
-                ph = '%.1f'%(random.uniform(res.goal_ph_low-1, res.goal_ph_high+1))
-                ppm = random.randint(res.goal_ppm-50, res.goal_ppm+50)
-                print("Reservoir: ", res.id)
-                params2 = {'id': res.id, 'ph': ph, 'ppm': ppm, }
+            # for res in Reservoir.objects.all():
+            i = 0;
+            while i < 6:
+                ph = '%.1f'%(random.uniform(4, 8))
+                ppm = random.randint(800, 1000)
+                params2 = {'id': i, 'ph': ph, 'ppm': ppm, }
                 rr = requests.post("http://52.11.95.35//Hydra/update/reservoir/", data=params2)
                 # rr.prepare()
                 print(rr)
