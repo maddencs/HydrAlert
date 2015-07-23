@@ -25,7 +25,9 @@ SECRET_KEY = '_x4rml#i_+ma)8e#3@i=z9!)jn7apynqfxx=jmxsb3)+ingg$m'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '.corysmadden.com.',
+]
 
 
 # Application definition

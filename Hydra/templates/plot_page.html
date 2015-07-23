@@ -54,10 +54,10 @@
 
         <ul id="menuBar">
             <article class="plotShape input-small col-md-3" id="modResArt">
-                <span id="closeButton" onclick="closeForm()">X</span>
+                <span class="closeButton">X</span>
                 <span id="resIDSpan"></span>
 
-                <form class="input-small" action="/Hydra/modify/reservoir/{{ res_id }}/" method="POST" id="modResForm">
+                <form class="input-small" action="/modify/reservoir/{{ res_id }}/" method="POST" id="modResForm">
                     {% csrf_token %}
                     <label for="goal_ph_low">Lower pH Limit:</label>
                     <input type="number" name="goal_ph_low" step=".1" id="goal_ph_low">
@@ -67,15 +67,15 @@
                     <input type="number" name="goal_ppm" id="goal_ppm">
                     <label for="ppm_tolerance">PPM Tolerance:</label>
                     <input id="ppm_tolerance" name="ppm_tolerance" type="number">
-                    <input type="submit" onclick="closeForm()" value="Save">
+                    <input type="submit" value="Save">
                 </form>
             </article>
 
             <article class="plotShape input-small col-md-3" id="modPlotArt">
-                <span id="closeButton" onclick="closeForm()">X</span>
+                <span class="closeButton">X</span>
                 <span id="plotIDSpan"></span>
 
-                <form class="input-small" action="/Hydra/modify/plot/{{ plot_id }}/" method="POST" id="modPlotForm">
+                <form class="input-small" action="/modify/plot/{{ plot_id }}/" method="POST" id="modPlotForm">
                     {% csrf_token %}
                     <label for="light_start">Light Start Time: </label>
                     <input type="time" id="light_start" name="light_start">
@@ -89,16 +89,16 @@
                     <input type="number" id="goal_humid" name="goal_humid">
                     <label for="humid_tolerance">Humidity Tolerance: </label>
                     <input type="number" id="humid_tolerance" name="humid_tolerance">
-                    <input type="submit" onclick="closeForm()" value="save">
+                    <input type="submit" value="save">
                 </form>
             </article>
 
             <li id="addPlot"><span>New Plot</span>
                 <br>
                 <article class="col-md-3 plotShape" id="addPlotDiv">
-                    <a id="closeButton" onclick="closeForm()">X</a>
+                    <a class="closeButton">X</a>
 
-                    <form id="plotForm" action="/Hydra/add/plot/" method="POST">
+                    <form id="plotForm" action="/add/plot/" method="POST">
                         {% csrf_token %}
                         <label for="light_start">Lights Start Time: </label>
                         <input id="light_start" name="light_start" type="time">
@@ -108,7 +108,7 @@
                         <input id="goal_temp" name="goal_temp" type="number" min="0" max="120">
                         <label for="goal_humid">Goal Humidity: </label>
                         <input id="goal_humid" name="goal_humid" type="number" min="0" max="100">
-                        <input type="submit" onclick="closeForm()" value="Create Plot">
+                        <input type="submit" value="Create Plot">
                     </form>
                 </article>
             </li>
@@ -116,9 +116,9 @@
             <li class="form" id="addReservoir"><span>New Reservoir</span>
                 <br>
                 <article id="addResDiv" class="plotShape form">
-                    <a id="closeButton" onclick="closeForm()">X</a>
+                    <a class="closeButton">X</a>
 
-                    <form id="resForm" action="/Hydra/add/reservoir/" method="POST">
+                    <form id="resForm" action="/add/reservoir/" method="POST">
                         {% csrf_token %}
                         <label for="plot">Plot: </label>
                         <select id="plotDropDown" name="plot" class="input-small">
@@ -130,25 +130,25 @@
                         <label for="goal_ppm">Goal PPM: </label>
                         <input id="goal_ppm" name="goal_ppm" type="number">
                         <br>
-                        <input type="submit" onclick="closeForm()" value="Add">
+                        <input type="submit" value="Add">
                     </form>
                 </article>
             </li>
 
-            <li id="logOut"><a href="/Hydra/logout/">Logout</a></li>
+            <li id="logOut"><a href="/logout/">Logout</a></li>
 
             <li id="logIn"><span>Switch User</span>
                 <br>
                 <article id="logInDiv" class="plotShape">
-                    <a id="closeButton" onclick="closeForm()">X</a>
+                    <a class="closeButton">X</a>
 
-                    <form action="/Hydra/login/" class="input-small" method="POST">
+                    <form action="/login/" class="input-small" method="POST">
                         {% csrf_token %}
                         <label for="username">Username: </label>
                         <input name="username" id="username" type="text">
                         <label for="password">Password: </label>
                         <input name="password" id="password" type="password">
-                        <input type="submit" onclick="closeForm()" value="Login">
+                        <input type="submit" value="Login">
                     </form>
                 </article>
             </li>
@@ -156,9 +156,9 @@
             <li id="infoButton"><span>Change Personal Info</span>
                 <br>
                 <article id="changeInfo" class="plotShape">
-                    <a id="closeButton" onclick="closeForm()">X</a>
+                    <a class="closeButton">X</a>
 
-                    <form method="POST" id="changeInfo" class="input-small" action="/Hydra/change_info/">
+                    <form method="POST" id="changeInfo" class="input-small" action="/change_info/">
                         {% csrf_token %}
                         <label for="email">Email Address</label>
                         <input name="email" id="email" placeholder="{{ request.user.email }}" type="email">
@@ -196,7 +196,7 @@
         var plotDropDown = document.getElementById('plotDropDown');
         plotDropDown.innerHTML = "";
         document.getElementById('plotDiv').innerHTML = "";
-        $('#moveResList>ul').html('');
+        var moveResList = $('#moveResList>ul').html('');
         for (var p = 0; p < data['plot_list'].length; p++) {
             var plot = data['plot_list'][p];
             var plotElement = document.createElement("article");
@@ -217,7 +217,7 @@
             var moveResPlotLI = document.createElement("li");
             moveResPlotLI.setAttribute("plotRealID", plot.id);
             moveResPlotLI.innerHTML = "Plot: " + plotPersonalID;
-            var moveResList = $('#moveResList>ul');
+{#            var moveResList = $('#moveResList>ul');#}
             moveResList.append(moveResPlotLI);
             plotDetails.setAttribute("plot_id", plotPersonalID);
             plotDetails.setAttribute("plotRealID", plot.id);
@@ -309,7 +309,7 @@
                     $(delRes).click(function (event) {
                         if (confirm("Are you sure you want to delete the reservoir?")) {
                             var resId = event.target.getAttribute("res_id");
-                            $.ajax("/Hydra/delete/reservoir/" + resId)
+                            $.ajax("/delete/reservoir/" + resId)
                                     .done(function () {
                                         alert("Reservoir deleted!");
                                     })
@@ -329,7 +329,7 @@
                     resATag.addEventListener("click", function (event) {
                         var res = event.target;
                         var res_id = res.getAttribute("res_id");
-                        var resSubmit = "/Hydra/modify/reservoir/" + res_id + "/";
+                        var resSubmit = "/modify/reservoir/" + res_id + "/";
                         document.getElementById("resIDSpan").innerHTML = "Reservoir: " +
                                 event.target.getAttribute("personal_id");
                         var modResForm = document.getElementById("modResForm");
@@ -407,7 +407,7 @@
 
     var grabData = function () {
         request.onreadystatechange = onRequestChange;
-        request.open("GET", "/Hydra/data_grab/", true);
+        request.open("GET", "/data_grab/", true);
         request.send();
     };
 
@@ -422,11 +422,15 @@
     });
 
     function closeForm() {
-        var parent = $(event.target);
-        var closest = parent.closest('article');
+        var target = $(e.target);
+        var closest = target.closest('article');
         $(closest).hide('slow');
         resume();
     }
+    $('.closeButton').click(function(e){
+        closeForm();
+    });
+    $
 
     $(document).ready(function () {
         $('#resForm').ajaxForm(function () {
@@ -498,7 +502,7 @@
                     document.getElementById("goal_ph_high").value = infoLI.getAttribute("goal_ph_high");
                     document.getElementById("goal_ppm").value = infoLI.getAttribute("goal_ppm");
                     document.getElementById("ppm_tolerance").value = infoLI.getAttribute("ppm_tolerance");
-                    document.getElementById("modResForm").setAttribute("action", "/Hydra/modify/reservoir/" + infoLI.getAttribute("resRealID") + "/");
+                    document.getElementById("modResForm").setAttribute("action", "/modify/reservoir/" + infoLI.getAttribute("resRealID") + "/");
                     $('#modResArt').toggle('fast');
                 });
                 {#                $('#modifyRes').click(function (infoLI) {#}
@@ -513,7 +517,7 @@
                     pause();
                     var plot = e.target.getAttribute("plotRealID");
                     if (confirm('Are you sure you wish to move this to plot' + e.target.innerHTML + '?')) {
-                        $.ajax("/Hydra/move/reservoir/" + infoLI.getAttribute("resRealID") + "/" + plot + "/")
+                        $.ajax("/move/reservoir/" + infoLI.getAttribute("resRealID") + "/" + plot + "/")
                                 .done(function () {
                                     resume();
                                 })
@@ -537,7 +541,7 @@
                     document.getElementById("goal_temp").value = plotStats.getAttribute("goal_temp");
                     document.getElementById("temp_tolerance").value = plotStats.getAttribute("temp_tol");
                     var modPlotForm = document.getElementById("modPlotForm");
-                    var plotSubmit = "/Hydra/modify/plot/" + plotStats.getAttribute("plotRealID") + "/";
+                    var plotSubmit = "/modify/plot/" + plotStats.getAttribute("plotRealID") + "/";
                     modPlotForm.setAttribute("action", plotSubmit);
                     $('#modPlotArt').toggle('slow');
                 });
@@ -562,32 +566,32 @@
 
 
         {# Hide context menu divs #}
-        window.addEventListener("click", function (e) {
-            var pdiv = document.getElementById("plotRightClickMenu");
-            var rdiv = document.getElementById("resRightClickMenu");
-            if (e.target.id != "moveRes") {
-                console.log(e.target.id);
-                $(rdiv).hide();
-                $(pdiv).hide();
-            }
-            if ((e.target.id != "moveResList") && (e.target.id != "moveRes")) {
-                console.log(e.target.id);
-                $("#moveResList").hide();
-            }
+{#        window.addEventListener("click", function (e) {#}
+{#            var pdiv = document.getElementById("plotRightClickMenu");#}
+{#            var rdiv = document.getElementById("resRightClickMenu");#}
+{#            if (e.target.id != "moveRes") {#}
+{#                console.log(e.target.id);#}
+{#                $(rdiv).hide();#}
+{#                $(pdiv).hide();#}
+{#            }#}
+{#            if ((e.target.id != "moveResList") && (e.target.id != "moveRes")) {#}
+{#                console.log(e.target.id);#}
+{#                $("#moveResList").hide();#}
+{#            }#}
             {# Stopping data refresh when clicking inside a form #}
-            if (e.target.closest('article').classList.contains('form')) {
-                pause();
-            } else {
-                resume();
-            }
-        })
+{#            if (e.target.closest('article').classList.contains('form')) {#}
+{#                pause();#}
+{#            } else {#}
+{#                resume();#}
+{#            }#}
+{#        })#}
     })
     ;
 
     var delPlotFunc = function (plotStats) {
         pause();
         if (confirm("Are you sure you wish to delete this plot?")) {
-            $.ajax("/Hydra/delete/plot/" + plotStats.getAttribute("plotRealID"))
+            $.ajax("/delete/plot/" + plotStats.getAttribute("plotRealID"))
                     .done(function () {
                         alert("Plot deleted!");
                         resume();
@@ -602,7 +606,7 @@
     var delResFunc = function (res_id) {
         pause();
         if (confirm("Are you sure you wish to delete this reservoir?")) {
-            $.ajax("/Hydra/delete/reservoir/" + res_id + "/")
+            $.ajax("/delete/reservoir/" + res_id + "/")
                     .done(function () {
                         alert("Reservoir deleted!");
                         resume();

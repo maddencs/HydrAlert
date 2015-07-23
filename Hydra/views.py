@@ -7,6 +7,9 @@ from django.views.decorators.csrf import csrf_exempt
 import json, ast
 
 
+def index(request):
+    return render(request, 'index.html')
+
 def register(request):
     if request.POST:
         user = User.objects.create_user(username=request.POST["Username"], password=request.POST["Password"])
@@ -20,7 +23,7 @@ def register(request):
 
         login(request, user)
 
-    return render(request, 'Hydra/register.html', {})
+    return render(request, 'register.html', {})
 
 
 def login_view(request):
@@ -36,7 +39,7 @@ def login_view(request):
         else:
             message = "Invalid Login"
 
-    return render(request, 'Hydra/login.html', {'message': message})
+    return render(request, 'login.html', {'message': message})
 
 
 def logout_view(request):
@@ -105,7 +108,7 @@ def plots(request, **kwargs):
     main_plot_list = Plot.objects.all()
     context['dropdown_plot_list'] = main_plot_list
     context['message'] = message
-    return render(request, 'Hydra/plot_page.html', context)
+    return render(request, 'plot_page.html', context)
 
 
 @login_required(login_url='/Hydra/login/')
@@ -161,7 +164,7 @@ def add_sensor(request, res_id):
         sensor.save()
 
         return redirect('plots')
-    return render(request, 'Hydra/add_sensor.html', {'res_id': res_id})
+    return render(request, 'add_sensor.html', {'res_id': res_id})
 
 @login_required(login_url='/Hydra/login/')
 def change_info(request):
@@ -178,7 +181,7 @@ def create_email(request):
     plot_list = AlertPlot.objects.filter(user=user)
     reservoir_list = AlertRes.objects.filter(user=user)
     context = {'plot_list': plot_list, 'res_list': reservoir_list, }
-    return render(request, 'Hydra/alert_email.html', context)
+    return render(request, 'alert_email.html', context)
 
 
 @login_required(login_url='/Hydra/login/')
@@ -229,7 +232,7 @@ def modify_plot(request, plot_id):
 
 
 def plot_graph(request, plot_id):
-    return render(request, 'Hydra/graph_page.html', {'plot_id': plot_id})
+    return render(request, 'graph_page.html', {'plot_id': plot_id})
 
 
 @csrf_exempt
